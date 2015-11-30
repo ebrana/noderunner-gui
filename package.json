@@ -26,6 +26,7 @@
     "gulp-util": "^3.0.2",
     "less": "^2.5.1",
     "less-loader": "^2.0.0",
+    "moment": "^2.10.6",
     "node-libs-browser": "^0.5.2",
     "node-notifier": "^4.1.0",
     "react": "^0.13.1",

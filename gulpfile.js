@@ -33,6 +33,7 @@ gulp.task('eslint', function() {
 
 gulp.task('server',
   ['env', args.production ? 'build-webpack-production' : 'build-webpack-dev'],
-  bg('nodemon', 'src/server')
+  //bg('nodemon', 'src/server')
+  bg('node', 'src/server')
 );
 gulp.task('default', ['server']);
