@@ -23,19 +23,19 @@ React.render(
       </div>
       <Row>
         <Panel size="6" title="Running">
-          <QueueJobsList queueName="immediate" socket={socket} columns={['status', 'implementation', 'job', 'output']}/>
+          <QueueJobsList queueName="immediate" socket={socket} columns={['status', 'host', 'job', 'output']}/>
         </Panel>
       </Row>
 
       <Row>
         <Panel size="6" title="History">
-          <QueueJobsList queueName="history" socket={socket} columns={['rerun', 'status', 'finished', 'duration', 'implementation', 'job', 'output']} />
+          <QueueJobsList queueName="history" socket={socket} columns={['rerun', 'status', 'finished', 'host', 'job', 'output']} />
         </Panel>
       </Row>
 
       <Row>
         <Panel size="6" title="Planned">
-        <QueueJobsList queueName="planned" socket={socket} columns={['schedule', 'implementation', 'job']} />
+        <QueueJobsList queueName="planned" socket={socket} columns={['schedule', 'host', 'job']} />
         </Panel>
       </Row>
     </div>

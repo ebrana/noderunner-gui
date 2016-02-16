@@ -52,10 +52,12 @@ export default class QueueJobsList extends React.Component {
           </thead>
           <tbody>
           {this.state.data.map((row, idx) => {
-            row.command = row.interpreter + ' ' + row.executable + ' ' + row.args;
-            row.implementation = row.basePath ? row.basePath.replace('/var/vyvoj/www/','').replace('/home/www/','') : '-';
-            // var matches = curr.match(/(\w*)-(\w*)-(\w*)/);
-            row.job = typeof row.tags == 'object' && row.tags.length == 2 ? row.tags[1] : row.command;
+            if (typeof row.command == 'undefined') row.command = row.interpreter + ' ' + row.executable + ' ' + row.args;
+
+            if (typeof row.host == 'undefined') row.host = row.basePath ? row.basePath.replace('/var/vyvoj/www/','').replace('/home/www/','') : '-';
+            row.host = row.host.replace('http://','');
+
+            if (typeof row.job == 'undefined') row.job = typeof row.tags == 'object' && row.tags.length == 2 ? row.tags[1] : row.command;
             row.duration = row.finished > 0 && row.started > 0 ? (row.finished - row.started) + ' s' : null;
 
             var boundClick = this.rowClick.bind(this, row);
