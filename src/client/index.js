@@ -1,42 +1,41 @@
 import React from 'react';
-import QueueJobsList from './queuejobslist';
-import Tile from './tile';
-import Panel from './panel';
+import { render } from 'react-dom';
+import RunningJobsList from './runningjobslist';
+import Counter from './components/counter';
+import Chart from './components/loadChart';
+import NumberPanel from './numberPanel';
 import Row from './row';
+import Col from './col';
 
-//var socket = window.io('afrodita.ebrana.cz:8001');
-//var socket = window.io('localhost:8001');
+// var socket = window.io('afrodita.ebrana.cz:8001');
+// var socket = window.io('localhost:8001');
 var socket = window.io('achiles.ebrana.cz:8001');
 
-NProgress.done();
+const Arrow = () => (<div className="numberpanel-image-wrap"><img className="numberpanel-image" src="http://www.clker.com/cliparts/w/G/P/a/z/S/grey-right-arrow-hi.png" /></div>);
 
-const app = document.getElementById('app-root');
-React.render(
+// TODO zjistit nejak na serveru pocet threadu - threads count
+render((
     <div>
-      <div className="row tile_count">
-        <Tile name="Volná vlákna" event="freeThreadsCountChanged" socket={socket} icon="coffee" />
-        <Tile name="Běžících úkolů" event="runningCountChanged" socket={socket} icon="refresh" />
-        <Tile name="Čekajících úkolů" event="waitingCountChanged" socket={socket} icon="hourglass-start" />
-        <Tile name="Průměrná doba čekání" value="152236" icon="hourglass-end" />
-        <Tile name="Opakovaných úkolů" event="plannedCountChanged" socket={socket} icon="recycle" />
-        <Tile name="Hotových úkolů" event="historyCountChanged" socket={socket} icon="check" />
-      </div>
-      <Row>
-        <Panel size="6" title="Running">
-          <QueueJobsList queueName="immediate" socket={socket} columns={['status', 'host', 'job', 'output']}/>
-        </Panel>
-      </Row>
+        <Row style={{height: 200, marginBottom: 30}}>
+            <Chart socket={socket} threads={3} onMount={() => NProgress.done()} />
+        </Row>
+        <Row style={{alignItems: 'center', flexDirection: 'row', display: 'flex'}}>
+            <NumberPanel size="2" title={<span><i className={'fa fa-recycle'}></i> Scheduled</span>} right={<Arrow/>}>
+                <h1><Counter event="plannedCount" socket={socket} /></h1>
+            </NumberPanel>
+            <NumberPanel size="2" title={<span><i className={'fa fa-hourglass-start'}></i> Waiting</span>} right={<Arrow/>}>
+                <h1><Counter event="waitingCount" socket={socket} /></h1>
+            </NumberPanel>
+            <NumberPanel size="5" title={<span><i className={'fa fa-refresh'}></i> Running</span>} right={<Arrow />}>
+                <RunningJobsList queueName="immediate" socket={socket} threads={3} />
+            </NumberPanel>
+            <NumberPanel size="2" title={<span><i className={'fa fa-check'}></i> Completed</span>} right={<Arrow/>}>
+                <h1><Counter event="historyCount" socket={socket} /></h1>
+            </NumberPanel>
+            <Col size="1">
+                <img style={{width: '50%', marginTop: -8, marginLeft: 20, opacity: .7}} src="http://downloadicons.net/sites/default/files/trash-can-symbol-icon-504.png" />
+            </Col>
+        </Row>
 
-      <Row>
-        <Panel size="6" title="History">
-          <QueueJobsList queueName="history" socket={socket} columns={['rerun', 'status', 'finished', 'host', 'job', 'output']} />
-        </Panel>
-      </Row>
-
-      <Row>
-        <Panel size="6" title="Planned">
-        <QueueJobsList queueName="planned" socket={socket} columns={['schedule', 'host', 'job']} />
-        </Panel>
-      </Row>
     </div>
-, app);
+), document.getElementById('app-root'));

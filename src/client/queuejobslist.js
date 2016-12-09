@@ -8,10 +8,12 @@ export default class QueueJobsList extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(props)
+
     this.state = {data: [], filter: {}};
 
     this.props.socket.on('initial' + this.props.queueName + 'Data', data => {
-      //console.log('initial'+this.props.queueName+'Data', data)
+      console.log('initial'+this.props.queueName+'Data', data)
       this.setState({data: data});
     });
 
@@ -98,7 +100,7 @@ export default class QueueJobsList extends React.Component {
   }
 
   rowClick(row,e) {
-    alert(JSON.stringify(row).replace(new RegExp(',', 'g'),',\n'));
+    // alert(JSON.stringify(row).replace(new RegExp(',', 'g'),',\n'));
   }
 
 }
@@ -107,7 +109,7 @@ QueueJobsList.propTypes = {
   onFilterChange: React.PropTypes.func
 };
 
-class QueueJobsListHeaderTr extends React.Component {
+export class QueueJobsListHeaderTr extends React.Component {
   render() {
     return (
         <tr>{this.props.columns.map(function(title, idx) {

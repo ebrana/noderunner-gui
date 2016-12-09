@@ -13,7 +13,7 @@ export default class Panel extends React.Component {
     });
 
     return (
-        <div className="col-md-{this.props.sizeMd ? this.props.sizeMd : this.props.size} col-sm-{this.props.sizeSm ? this.props.sizeSm : this.props.size} col-xs-{this.props.sizeXs ? this.props.sizeXs : this.props.size}">
+        <div className={'col-md-'+(this.props.sizeMd ? this.props.sizeMd : this.props.size)+' col-sm-'+(this.props.sizeSm ? this.props.sizeSm : this.props.size)+' col-xs-'+(this.props.sizeXs ? this.props.sizeXs : this.props.size)}>
           <div className="x_panel">
             <div className="row x_title" style={{position: 'relative', zIndex: 1000}}>
               <h2>{this.props.title}</h2>

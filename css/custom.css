@@ -6343,3 +6343,84 @@ ul.notifications {
     float: right;
     opacity: 1;
 }
+
+.numberpanel-image {
+    width: 60px;
+    height: 120px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    opacity: .3;
+}
+
+.numberpanel-image-wrap {
+    width: 60px;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    right: -10px;
+}
+
+.table.running {
+    text-align: left;
+    margin-bottom: 0px;
+}
+
+.table.running td {
+    vertical-align: middle;
+}
+
+.table.running .status {
+    width: 60px;
+    text-align:center;
+}
+
+.table.running .thread {
+    width: 40px;
+    text-align:center;
+}
+/*
+table.running tr.row0 td {
+    background-color: #def2da;
+}
+
+table.running tr.row1 td {
+    background-color: #f3f1c5;
+}
+
+table.running tr.row2 td {
+    background-color: #daeaf2;
+}*/
+
+table.running td {
+    border-top: 0px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+table.running tr.row0 td.thread {
+    background-color: rgba(132, 183, 97, 0.8);
+    color: rgb(88, 125, 59);
+}
+
+table.running tr.row1 td.thread {
+    background-color: rgba(242, 228, 97, 0.8);
+    color: rgb(125, 117, 62);
+}
+
+table.running tr.row2 td.thread {
+    background-color: rgba(146, 216, 242, 0.8);
+    color: rgb(71, 112, 124);
+}
+
+.table.running th.status, .table.running th.thread {
+    text-align:center;
+}
+
+.numberPanel h1 {
+    font-size: 3.5em;
+}
+
+.numberPanel .x_panel {
+    padding: 0px;
+}

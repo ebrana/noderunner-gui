@@ -4,6 +4,7 @@ import compression from 'compression';
 import config from './config';
 import Html from './html';
 import socketjs from './';
+import ReactDOMServer from 'react-dom/server';
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.use('/fonts', express.static('fonts'));
 app.use('/js', express.static('js'));
  
 app.get('*', (req, res) => {
-  res.send('<!DOCTYPE html>' + React.renderToStaticMarkup(
+  res.send('<!DOCTYPE html>' + ReactDOMServer.renderToStaticMarkup(
     <Html
       isProduction={config.isProduction}
       version={config.version}
