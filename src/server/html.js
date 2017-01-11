@@ -3,7 +3,7 @@ import React from 'react';
 export default class Html extends React.Component {
 
   render() {
-    const {isProduction, version} = this.props;
+    const {isProduction, version, servers, selectedServer} = this.props;
     const appSrc = isProduction ? `/build/app.js?v=${version}`
                                 : '//localhost:8888/build/app.js';
     return (
@@ -33,6 +33,11 @@ export default class Html extends React.Component {
         <link href="css/maps/jquery-jvectormap-2.0.1.css" type="text/css" rel="stylesheet" />
 
         <div className="container body">
+          <ul className="nav nav-pills nav-justified" style={{padding: 10}}>
+              {servers.map((server) => (
+                  <li key={server.url} className={server.url == selectedServer ? 'active' : ''}><a href={'?server='+server.url}>{server.name}</a></li>
+              ))}
+          </ul>
           <div className="right_col" role="main">
             <div id="app-root" />
             <script src="/socket.io/socket.io.js"></script>

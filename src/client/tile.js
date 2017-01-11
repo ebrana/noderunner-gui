@@ -8,7 +8,7 @@ export default class Tile extends React.Component {
     var self = this;
     if (this.props.event) {
       self.props.socket.on(this.props.event, data => {
-        console.log(this.props.event, data);
+        // console.log(this.props.event, data);
         self.setState({text: data});
       });
     }

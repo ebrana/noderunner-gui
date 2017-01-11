@@ -7,9 +7,8 @@ import NumberPanel from './numberPanel';
 import Row from './row';
 import Col from './col';
 
-// var socket = window.io('afrodita.ebrana.cz:8001');
-// var socket = window.io('localhost:8001');
-var socket = window.io('achiles.ebrana.cz:8001');
+var server = /server=([^&]+)/.exec(location.search)[1];
+var socket = window.io(server);
 
 const Arrow = () => (<div className="numberpanel-image-wrap"><img className="numberpanel-image" src="http://www.clker.com/cliparts/w/G/P/a/z/S/grey-right-arrow-hi.png" /></div>);
 
