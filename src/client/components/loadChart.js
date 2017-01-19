@@ -24,29 +24,13 @@ export default React.createClass({
             });
         });
 
-        var chart = this.refs.chart.state.chart;
-        chart.ignoreZoomed = false;
-        chart.addListener("zoomed", function(event) {
-            if (chart.ignoreZoomed) {
-                chart.ignoreZoomed = false;
-                return;
-            }
-            chart.zoomStartDate = event.startDate;
-            chart.zoomEndDate = event.endDate;
-        });
-
-        chart.addListener("dataUpdated", function(event) {
-            console.log(chart.zoomStartDate);
-            chart.zoomToDates(chart.zoomStartDate, chart.zoomEndDate);
-        });
-
         this.props.socket.on('newThreadsStat', data => {
             let dataProvider = self.state.dataProvider.slice(0)
             dataProvider.push(self.parseLoadData(data));
             self.setState({
                 dataProvider: dataProvider
             });
-            console.log(this.refs.chart.state.chart)
+
             if (this.refs.chart.state.chart) {
                 this.refs.chart.state.chart.ignoreZoomed = true;
                 this.refs.chart.state.chart.validateData()
@@ -80,7 +64,7 @@ export default React.createClass({
                 "borderThickness": 1,
                 "shadowAlpha": 0
             },
-            "graphs": [...Array(this.props.threads).keys()].reverse().map((i) => ({
+            "graphs": [...Array(this.props.threads).keys()].map((i) => ({
                     "valueField": "thread"+i,
                     "color": "#67b7dc",
                     "fillAlphas": 0.8,
@@ -88,6 +72,20 @@ export default React.createClass({
                     "showBalloon": (i-1 == this.props.threads),
                     "balloonText": (i-1 == this.props.threads) ? "<span style='font-size:18px;'><b>Load [[total]]</b></span><br />Thread #1: [[thread0]]<br />Thread #2: [[thread1]]<br />Thread #3: [[thread2]]" : null,
             })),
+            "chartScrollbar": {
+                "oppositeAxis": false,
+                "offset":30,
+                "scrollbarHeight": 30,
+                "backgroundAlpha": 0,
+                "selectedBackgroundAlpha": 0.1,
+                "selectedBackgroundColor": "#888888",
+                "graphFillAlpha": 0,
+                "graphLineAlpha": 0.5,
+                "selectedGraphFillAlpha": 0,
+                "selectedGraphLineAlpha": 1,
+                "autoGridCount": true,
+                "color":"#AAAAAA"
+            },
             "chartCursor": {
                 "valueLineEnabled": true,
                 "valueLineBalloonEnabled": true,
@@ -107,5 +105,6 @@ export default React.createClass({
             },
             "dataProvider": this.state.dataProvider
         });
+
     }
 });

@@ -56,7 +56,7 @@ export default class RunningJobsList  extends React.Component  {
                     </tr>
                 </thead>
                 <tbody>
-                {[...Array(this.props.threads).keys()].map((idx) => {
+                {[...Array(this.props.threads).keys()].reverse().map((idx) => {
 
                     var row = this.state.data.find((r) => r && r.thread == idx);
 

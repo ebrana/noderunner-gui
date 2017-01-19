@@ -6381,7 +6381,7 @@ ul.notifications {
     text-align:center;
 }
 /*
-table.running tr.row0 td {
+table.running tr.row2 td {
     background-color: #def2da;
 }
 
@@ -6389,7 +6389,7 @@ table.running tr.row1 td {
     background-color: #f3f1c5;
 }
 
-table.running tr.row2 td {
+table.running tr.row0 td {
     background-color: #daeaf2;
 }*/
 
@@ -6398,7 +6398,12 @@ table.running td {
     border-bottom: 1px solid #ddd;
 }
 
-table.running tr.row0 td.thread {
+table.running tr.row3 td.thread {
+    background-color: rgba(181, 106, 91, 0.8);
+    color: rgb(125, 65, 68);
+}
+
+table.running tr.row2 td.thread {
     background-color: rgba(132, 183, 97, 0.8);
     color: rgb(88, 125, 59);
 }
@@ -6408,7 +6413,7 @@ table.running tr.row1 td.thread {
     color: rgb(125, 117, 62);
 }
 
-table.running tr.row2 td.thread {
+table.running tr.row0 td.thread {
     background-color: rgba(146, 216, 242, 0.8);
     color: rgb(71, 112, 124);
 }

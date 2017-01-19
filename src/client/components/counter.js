@@ -17,7 +17,7 @@ export default class Counter extends React.Component {
                 if (!this.diffEventsBound) {
                     // incrementation
                     this.props.socket.on(event + 'Increased', diff => {
-                        console.log(event + 'Increased', diff);
+                        // console.log(event + 'Increased', diff);
 
                         let state = Object.assign({}, this.state);
                         state.value += diff;
@@ -26,7 +26,7 @@ export default class Counter extends React.Component {
 
                     // decrementation
                     this.props.socket.on(event + 'Decreased', diff => {
-                        console.log(event + 'Decreased', diff);
+                        // console.log(event + 'Decreased', diff);
 
                         let state = Object.assign({}, this.state);
                         state.value -= diff;
