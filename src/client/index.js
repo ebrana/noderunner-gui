@@ -12,6 +12,8 @@ var socket = window.io(server);
 
 const Arrow = () => (<div className="numberpanel-image-wrap"><img className="numberpanel-image" src="http://www.clker.com/cliparts/w/G/P/a/z/S/grey-right-arrow-hi.png" /></div>);
 
+setTimeout(() => NProgress.done(), 3000);
+
 // TODO zjistit nejak na serveru pocet threadu - threads count
 render((
     <div>

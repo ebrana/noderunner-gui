@@ -24,14 +24,31 @@ export default React.createClass({
             });
         });
 
+        var chart = this.refs.chart.state.chart;
+        chart.ignoreZoomed = false;
+        chart.addListener("zoomed", function(event) {
+            if (chart.ignoreZoomed) {
+                chart.ignoreZoomed = false;
+                return;
+            }
+            chart.zoomStartDate = event.startDate;
+            chart.zoomEndDate = event.endDate;
+        });
+
+        chart.addListener("dataUpdated", function(event) {
+            console.log(chart.zoomStartDate);
+            chart.zoomToDates(chart.zoomStartDate, chart.zoomEndDate);
+        });
+
         this.props.socket.on('newThreadsStat', data => {
             let dataProvider = self.state.dataProvider.slice(0)
             dataProvider.push(self.parseLoadData(data));
             self.setState({
                 dataProvider: dataProvider
             });
-
+            console.log(this.refs.chart.state.chart)
             if (this.refs.chart.state.chart) {
+                this.refs.chart.state.chart.ignoreZoomed = true;
                 this.refs.chart.state.chart.validateData()
             }
         });
@@ -78,7 +95,7 @@ export default React.createClass({
                 "cursorColor":"#258cbb",
                 "limitToGraph":"g1",
                 "valueLineAlpha":0.2,
-                "zoomable": false,
+                "zoomable": true,
                 "categoryBalloonDateFormat":"DD/MM/YY JJ:NN:SS"
             },
             "categoryField": "date",

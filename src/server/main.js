@@ -21,6 +21,7 @@ const app = express();
 app.use(compression());
 app.use('/build', express.static('build'));
 app.use('/css', express.static('css'));
+app.use('/node_modules', express.static('node_modules'));
 app.use('/fonts', express.static('fonts'));
 app.use('/js', express.static('js'));
 

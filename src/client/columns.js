@@ -25,8 +25,23 @@ export const Thread = (props) => {
     return (<span style={{fontSize: '2em'}}>#{props.row.thread+1}</span>)
 }
 
+export const Job = (props) => {
+    if (props.row.args) {
+        var args = /.* (\w*-\w*-\w*) 2>>/.exec(props.row.args);
+        args = args[1] ? args[1] : props.row.args;
+    } else {
+        var args = props.row.job;
+    }
+    return (<span style={{fontFamily: "Courier New"}}>{args}</span>)
+}
+
 export const Host = (props) => {
-    return (<span style={{fontFamily: "Courier New"}}>{props.row[props.col] ? props.row[props.col].replace('http://','') : props.row[props.col]}</span>)
+    if (props.row.basePath) {
+        var host = props.row.basePath.replace('/home/www/','');
+    } else {
+        var host = props.row.host.replace('http://','');
+    }
+    return (<span style={{fontFamily: "Courier New"}}>{host}</span>)
 }
 
 export const Default = (props) => {
