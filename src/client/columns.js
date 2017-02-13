@@ -28,7 +28,7 @@ export const Thread = (props) => {
 export const Job = (props) => {
     if (props.row.args) {
         var args = /.* (\w*-\w*-\w*) 2>>/.exec(props.row.args);
-        args = args[1] ? args[1] : props.row.args;
+        args = args && args[1] ? args[1] : props.row.args;
     } else {
         var args = props.row.job;
     }
