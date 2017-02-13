@@ -20,6 +20,7 @@ export default class QueueJobsList extends React.Component {
     toggleFilter() {
         this.setState(Object.assign(this.state, {showFilter: !this.state.showFilter}));
         if (!this.state.showFilter) {
+            this.setState(Object.assign(this.state, {filter: {}}));
             this.onRefresh();
         }
     }
