@@ -1,5 +1,4 @@
 import React from 'react';
-import QueueJobsList from './queuejobslist';
 import * as columnComponents from './columns';
 
 const COLUMNS = ['thread', 'host', 'job', 'status'];

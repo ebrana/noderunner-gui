@@ -11,7 +11,7 @@ body.nav-sm .container.body .right_col {
     margin-left: 70px;
     z-index: 2;
 }
-.right_col{min-height: 1000px;}
+
 body.nav-sm .navbar.nav_title {
     width: 70px;
 }
@@ -6428,4 +6428,9 @@ table.running tr.row0 td.thread {
 
 .numberPanel .x_panel {
     padding: 0px;
+    border-bottom: 4px #fff solid;
+}
+
+.numberPanel.active .x_panel {
+    border-bottom: 4px #1A82C3 solid;
 }

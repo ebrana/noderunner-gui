@@ -1,126 +1,141 @@
+import _ from 'lodash';
 import React from 'react';
-import Time from './time.js';
-import moment from 'moment';
+import * as columnComponents from './columns';
 
 export default class QueueJobsList extends React.Component {
 
-  // TODO props types
+    constructor(props) {
+        super(props);
 
-  constructor(props) {
-    super(props);
-    console.log(props)
+        this.state = {data: [], filter: {}, showFilter: false};
 
-    this.state = {data: [], filter: {}};
+        this.props.socket.on(this.props.queueName + 'QueueData', data => {
+            console.log(this.props.queueName + 'QueueData', data)
+            this.setState({data: data});
+        });
 
-    this.props.socket.on('initial' + this.props.queueName + 'Data', data => {
-      console.log('initial'+this.props.queueName+'Data', data)
-      this.setState({data: data});
-    });
-
-    this.props.onFilterChange((toggle) => {
-      this.state.showFilter = toggle;
-      this.setState(this.state);
-    });
-
-  }
-
-
-  setFilterItem(evt) {
-    if (evt.target.value.length > 0) {
-      this.state.filter[evt.target.name] = evt.target.value;
-    } else {
-      delete this.state.filter[evt.target.name];
+        this.props.socket.emit('requestQueueData', {queue: this.props.queueName, filter: {}});
     }
-    this.setState(this.state);
-    this.props.socket.emit('setQueueFilter', {queue: this.props.queueName, filter: this.state.filter});
-  }
 
-  render() {
-    return this.state.data.length || this.state.showFilter ? (
-        <table className="table" style={{position:'relative', top: -37, marginBottom: -37}}>
-          <thead>
-            <QueueJobsListHeaderTr columns={this.props.columns} />
-            <tr style={{backgroundColor: '#f8f8f8', display: (this.state.showFilter ? 'table-row' : 'none')}}>
-              {this.props.columns.map((title, idx) => {
-                if (title == 'status') {
-                  return (<th key={idx}><select name="status" onChange={this.setFilterItem.bind(this)}><option value="">-</option><option>planed</option><option>running</option><option>fetched</option><option>success</option><option>error</option></select></th>);
-                } else if (title != 'duration' && title != 'finished' && title != 'rerun') {
-                  return (<th key={idx}><input name={title} onChange={this.setFilterItem.bind(this)} style={{width:'100%', fontWeight: 'normal'}} type="text" /></th>);
-                } else {
-                  return (<th key={idx}></th>);
-                }
-              })}
-            </tr>
-          </thead>
-          <tbody>
-          {this.state.data.map((row, idx) => {
-            if (typeof row.command == 'undefined') row.command = row.interpreter + ' ' + row.executable + ' ' + row.args;
+    toggleFilter() {
+        this.setState(Object.assign(this.state, {showFilter: !this.state.showFilter}));
+        if (!this.state.showFilter) {
+            this.onRefresh();
+        }
+    }
 
-            if (typeof row.host == 'undefined') row.host = row.basePath ? row.basePath.replace('/var/vyvoj/www/','').replace('/home/www/','') : '-';
-            row.host = row.host.replace('http://','');
+    onRefresh() {
+        this.props.socket.emit('requestQueueData', {queue: this.props.queueName, filter: this.state.filter});
+    }
 
-            if (typeof row.job == 'undefined') row.job = typeof row.tags == 'object' && row.tags.length == 2 ? row.tags[1] : row.command;
-            row.duration = row.finished > 0 && row.started > 0 ? (row.finished - row.started) + ' s' : null;
+    setFilterItem(key, value) {
+        if (value && value.length > 0) {
+            this.state.filter[key] = value;
+        } else {
+            delete this.state.filter[key];
+        }
+        this.setState(this.state);
 
-            var boundClick = this.rowClick.bind(this, row);
-            return (
-                <tr key={row._id} onClick={boundClick}>
-                  {this.props.columns.map( (col) => {
-                    var width = col.replace('finished','110px').replace('status', '100px').replace('duration', '50px').replace('implementation', '150px').replace('job', '400px').replace('rerun', '20px !important').replace('schedule', '30px');
-                    if (col == 'status') {
-                      var className = "btn btn-"+(row.status ? row.status.replace('running','warning').replace('fetched','info').replace('error','danger').replace('planed','info').replace('stucked','warning') : '-')+" btn-xs";
-                      var iconClassName = "fa fa-"+(row.status ? row.status.replace('running','refresh').replace('fetched','hourglass-end').replace('success','check').replace('error','exclamation').replace('planed','hourglass-start').replace('stucked','exclamation-triangle') : '-')+" btn-xs";
-                      return (<td style={{width: width, padding: '5px 5px 2px 3px'}}><span style={{width: '85px', textAlign:'left'}} className={className}><span className={iconClassName}></span><span style={{textAlign:'center', width:'60px', display: 'inline-block', paddingRight: '5px'}}>{row[col]}</span></span></td>);
-                    } else if (col == 'rerun') {
-                      return (<td style={{width: width, padding:'5px 0px 2px 5px'}}><a className="btn btn-info btn-xs fa fa-refresh" style={{height: 32, width: 32, lineHeight: '30px', fontSize: '1.3em', marginRight: 0}} onClick={this.rerun.bind(this, row)}></a></td>);
-                    } else if (col == 'runTime') {
-                      return (<td style={{width: width}}><Time started={row.started} /></td>);
-                    } else if (col == 'schedule') {
-                      return (<td style={{width: width, paddingLeft: 150}}>{row[col]}</td>);
-                    } else if (col == 'finished') {
-                      return (<td style={{width: width}}>{moment(row[col]*1000).fromNow().replace('minutes','mins')}</td>);
-                    } else if (col == 'output' || col == 'job' || col == 'implementation') {
-                      return (<td style={{width: width, fontFamily:"Courier New"}}>{row[col]}</td>);
-                    } else {
-                      return (<td style={{width: width}}>{row[col]}</td>);
-                    }
-                  })}
-                </tr>
-            );
-          })}
-          </tbody>
-        </table>
-    ) : false;
-  }
+        this.props.socket.emit('requestQueueData', {queue: this.props.queueName, filter: this.state.filter});
+    }
 
-  rerun(row,e) {
-    //alert('rerun' + row._id);
-    this.props.socket.emit('rerun', {id: row._id, queue: row.queue});
-    return false;
-  }
+    render() {
 
-  rowClick(row,e) {
-    // alert(JSON.stringify(row).replace(new RegExp(',', 'g'),',\n'));
-  }
+        return (
+            <div className={'col-md-'+(this.props.sizeMd ? this.props.sizeMd : this.props.size)+' col-sm-'+(this.props.sizeSm ? this.props.sizeSm : this.props.size)+' col-xs-'+(this.props.sizeXs ? this.props.sizeXs : this.props.size)}>
+                <div className="x_panel">
+                    <div className="row x_title" style={{position: 'relative', zIndex: 1000}}>
+                        <h2>{this.props.title}</h2>
+                        <ul className="nav navbar-right panel_toolbox">
+                            <li><a className={'close-link btn' + (this.state.showFilter ? ' active' : '')} onClick={() => this.toggleFilter()}><i className="fa fa-filter"></i></a></li>
+                            <li><a className={'close-link btn'} onClick={() => this.onRefresh()}><i className="fa fa-refresh"></i></a></li>
+                        </ul>
+                    </div>
+                    <div className="x_content-">
+                        {this.state.data.length || this.state.showFilter ? (
+                            <table className="table">
+                                <thead>
+                                    <QueueJobsListHeaderTr columns={this.props.columns} />
+                                    <QueueJobsListFilterTr columns={this.props.columns} setFilterItem={_.debounce(this.setFilterItem.bind(this), 500)} showFilter={this.state.showFilter} />
+                                </thead>
+                                <tbody>
+                                {this.state.data.map((row, idx) => (
+                                    <tr className={"row" + idx} key={idx} onClick={() => this.rowClick(this, row)}>
+                                        {this.props.columns.map((col) => {
+
+                                            var component = col[0].toUpperCase() + col.slice(1);
+                                            var Column = columnComponents[component] ? columnComponents[component] : columnComponents.Default;
+
+                                            return (
+                                                <td className={col} key={row._id + col}>
+                                                    <Column col={col} row={row}/>
+                                                </td>
+                                            );
+
+                                        })}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        ) : false}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    rerun(row, e) {
+        this.props.socket.emit('rerun', {id: row._id, queue: row.queue});
+        return false;
+    }
+
+    rowClick(row, e) {
+        // alert(JSON.stringify(row).replace(new RegExp(',', 'g'),',\n'));
+    }
 
 }
+
 QueueJobsList.propTypes = {
-  socket: React.PropTypes.object.isRequired,
-  onFilterChange: React.PropTypes.func
+    socket: React.PropTypes.object.isRequired
 };
 
+export class QueueJobsListFilterTr extends React.Component {
+    render() {
+        return (
+            <tr style={{backgroundColor: '#f8f8f8', display: (this.props.showFilter ? 'table-row' : 'none')}}>
+                {this.props.columns.map((title, idx) => {
+                    if (title == 'status') {
+                        return (<th key={idx}><select name="status" onChange={(e) => this.props.setFilterItem(e.target.name, e.target.value)}>
+                                    <option value="">-</option>
+                                    <option>planed</option>
+                                    <option>running</option>
+                                    <option>fetched</option>
+                                    <option>success</option>
+                                    <option>error</option>
+                                </select></th>);
+                    } else if (title != 'duration' && title != 'finished' && title != 'rerun') {
+                        return (<th key={idx}><input autoComplete="off" name={title} onChange={(e) => this.props.setFilterItem(e.target.name, e.target.value)} style={{width: '100%', fontWeight: 'normal'}} type="text"/></th>);
+                    } else {
+                        return (<th key={idx}></th>);
+                    }
+                })}
+            </tr>
+        );
+    }
+}
+
 export class QueueJobsListHeaderTr extends React.Component {
-  render() {
-    return (
-        <tr>{this.props.columns.map(function(title, idx) {
-          if (title == 'schedule') {
-            return (<th style={{paddingLeft: 150}} key={idx}>{title}</th>);
-          } else if (title != 'rerun' && title != 'status') {
-            return (<th style={{paddingBottom: 15}} key={idx}>{title}</th>);
-          } else {
-            return (<th key={idx}></th>);
-          }
-        })}</tr>
-    );
-  }
+    render() {
+        return (
+            <tr>{this.props.columns.map(function (title, idx) {
+                if (title == 'schedule') {
+                    return (<th style={{paddingLeft: 150}} key={idx}>{title}</th>);
+                } else if (title != 'rerun' && title != 'status') {
+                    return (<th style={{paddingBottom: 15}} key={idx}>{title}</th>);
+                } else {
+                    return (<th key={idx}></th>);
+                }
+            })}</tr>
+        );
+    }
 }
