@@ -6434,3 +6434,28 @@ table.running tr.row0 td.thread {
 .numberPanel.active .x_panel {
     border-bottom: 4px #1A82C3 solid;
 }
+
+html {
+    overflow-y:scroll;
+}
+
+.reruninfo a.btn, .infoonly a.btn {
+    width: 35px;
+    height: 35px;
+
+    float: left;
+}
+
+.reruninfo>span {
+    width: 80px;
+    display: block;
+}
+
+td.statusinfo {
+    width: 160px;
+}
+
+td.statusinfo>span {
+    display:block;
+    width: 100%;
+}

@@ -61,7 +61,7 @@ export default class QueueJobsList extends React.Component {
                                 </thead>
                                 <tbody>
                                 {this.state.data.map((row, idx) => (
-                                    <tr className={"row" + idx} key={idx} onClick={() => this.rowClick(this, row)}>
+                                    <tr className={"row" + idx} key={idx} onClick={() => {}}>
                                         {this.props.columns.map((col) => {
 
                                             var component = col[0].toUpperCase() + col.slice(1);
@@ -69,7 +69,7 @@ export default class QueueJobsList extends React.Component {
 
                                             return (
                                                 <td className={col} key={row._id + col}>
-                                                    <Column col={col} row={row}/>
+                                                    <Column col={col} row={row} socket={this.props.socket} />
                                                 </td>
                                             );
 
@@ -83,15 +83,6 @@ export default class QueueJobsList extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    rerun(row, e) {
-        this.props.socket.emit('rerun', {id: row._id, queue: row.queue});
-        return false;
-    }
-
-    rowClick(row, e) {
-        // alert(JSON.stringify(row).replace(new RegExp(',', 'g'),',\n'));
     }
 
 }
@@ -114,7 +105,7 @@ export class QueueJobsListFilterTr extends React.Component {
                                     <option>success</option>
                                     <option>error</option>
                                 </select></th>);
-                    } else if (title != 'duration' && title != 'finished' && title != 'rerun') {
+                    } else if (title != 'duration' && title != 'finished' && title != 'reruninfo' && title != 'infoonly') {
                         return (<th key={idx}><input autoComplete="off" name={title} onChange={(e) => this.props.setFilterItem(e.target.name, e.target.value)} style={{width: '100%', fontWeight: 'normal'}} type="text"/></th>);
                     } else {
                         return (<th key={idx}></th>);
@@ -129,9 +120,9 @@ export class QueueJobsListHeaderTr extends React.Component {
     render() {
         return (
             <tr>{this.props.columns.map(function (title, idx) {
-                if (title == 'schedule') {
+                /*if (title == 'schedule') {
                     return (<th style={{paddingLeft: 150}} key={idx}>{title}</th>);
-                } else if (title != 'rerun' && title != 'status') {
+                } else */if (title != 'reruninfo' && title != 'infoonly' && title != 'status') {
                     return (<th style={{paddingBottom: 15}} key={idx}>{title}</th>);
                 } else {
                     return (<th key={idx}></th>);

@@ -52,9 +52,9 @@ class Main extends React.Component {
                              src="http://downloadicons.net/sites/default/files/trash-can-symbol-icon-504.png"/>
                     </Col>
                 </Row>
-                {this.state.queue == 'history' ?   <QueueJobsList socket={socket} title="Completed jobs list" queueName="history" columns={['host', 'job', 'output', 'status']} /> : null}
-                {this.state.queue == 'immediate' ? <QueueJobsList socket={socket} title="Waiting jobs list" queueName="immediate" columns={['host', 'job', 'output', 'status']} /> : null}
-                {this.state.queue == 'planned' ?   <QueueJobsList socket={socket} title="Scheduled jobs list" queueName="planned" columns={['host', 'job', 'schedule']} /> : null}
+                {this.state.queue == 'history' ?   <QueueJobsList socket={socket} title="Completed jobs list" queueName="history" columns={['reruninfo', 'finished', 'duration', 'host', 'job', 'output', 'status']} /> : null}
+                {this.state.queue == 'immediate' ? <QueueJobsList socket={socket} title="Waiting jobs list" queueName="immediate" columns={['infoonly', 'added', 'host', 'job', 'status']} /> : null}
+                {this.state.queue == 'planned' ?   <QueueJobsList socket={socket} title="Scheduled jobs list" queueName="planned" columns={['infoonly', 'schedule', 'host', 'job']} /> : null}
             </div>
         )
     }

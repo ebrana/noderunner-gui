@@ -1,7 +1,7 @@
 import React from 'react';
 import * as columnComponents from './columns';
 
-const COLUMNS = ['thread', 'host', 'job', 'status'];
+const COLUMNS = ['thread', 'host', 'job', 'statusinfo'];
 
 export default class RunningJobsList  extends React.Component  {
 
@@ -81,7 +81,7 @@ export default class RunningJobsList  extends React.Component  {
                             <tr className={"row"+idx} key={idx}>
                                 <td className="thread"><columnComponents.Thread row={{thread: idx}} /></td>
                                 <td colSpan={COLUMNS.length - 2}></td>
-                                <td className="status"><columnComponents.Status row={{status: 'idle'}} /></td>
+                                <td className="statusinfo"><columnComponents.Statusinfo row={{status: 'idle'}} /></td>
                             </tr>
                         );
                     }
