@@ -46,6 +46,15 @@ export const Infoonly = (props) => {
             if (props.row.added && props.row.started) {
                 props.row.waiting = Math.round((props.row.started-props.row.added)*10)/10 + 's'
             }
+            if (props.row.added) {
+                props.row.added = moment(props.row.added * 1000).format('D.M. H:mm:ss') + '('+props.row.added+')';
+            }
+            if (props.row.finished) {
+                props.row.finished = moment(props.row.finished * 1000).format('D.M. H:mm:ss') + '('+props.row.finished+')';
+            }
+            if (props.row.started) {
+                props.row.started = moment(props.row.started * 1000).format('D.M. H:mm:ss') + '('+props.row.started+')';
+            }
             let content = Object.keys(props.row).map((key) => '<tr><th>'+key+'</th><td style="padding-left:10px; font-family: \'Courier New\'">'+props.row[key]+'</td>');
 
             let $dialog = $('<div id="dialog"><table>'+content.join('')+'</table></div>').appendTo('body');
