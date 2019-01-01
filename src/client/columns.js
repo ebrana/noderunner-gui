@@ -106,7 +106,7 @@ export const Host = (props) => {
     if (props.row.basePath) {
         var host = props.row.basePath.replace('/home/www/','');
     } else {
-        var host = props.row.host.replace('http://','').replace('https://','');
+        var host = props.row.host ? props.row.host.replace('http://','').replace('https://','') : '-';
     }
     return (<span style={{fontFamily: "Courier New"}}>{host}</span>)
 }
