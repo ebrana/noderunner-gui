@@ -39,7 +39,11 @@ export default class Counter extends React.Component {
     }
 
     render() {
-        return <span>{this.state.value === null ? '-' : (this.state.value < 0 ? 0 : this.state.value)}</span>;
+        return <span>{this.state.value === null ? '-' : (this.state.value < 0 ? 0 : numberWithCommas(this.state.value))}</span>;
     }
 
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }

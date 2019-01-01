@@ -4,7 +4,7 @@ export default class Panel extends React.Component {
 
     render() {
         return (
-            <div onClick={() => this.props.onClick ? this.props.onClick() : null} style={{paddingRight: 50, cursor: this.props.onClick ? 'pointer' : 'default'}}
+            <div onClick={() => this.props.onClick ? this.props.onClick() : null} style={Object.assign( {paddingRight: 50, cursor: this.props.onClick ? 'pointer' : 'default'}, this.props.style)}
                  className={(this.props.isActive ? 'active ' : '') + 'numberPanel col-md-' + (this.props.sizeMd ? this.props.sizeMd : this.props.size) + ' col-sm-' + (this.props.sizeSm ? this.props.sizeSm : this.props.size) + ' col-xs-' + (this.props.sizeXs ? this.props.sizeXs : this.props.size)}>
                 <div className="x_panel">
                     <div className="x_content- text-center">

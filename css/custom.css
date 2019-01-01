@@ -6346,12 +6346,21 @@ ul.notifications {
 
 .numberpanel-image {
     width: 60px;
-    height: 120px;
+    height: 90px;
     position: absolute;
     top: 0;
     bottom: 0;
     margin: auto;
     opacity: .3;
+}
+
+.numberpanel-image-bottom {
+    width: 60px;
+    height: 90px;
+    position: absolute;
+    top: -24px;
+    opacity: .3;
+    transform: rotate(90deg);
 }
 
 .numberpanel-image-wrap {
@@ -6398,24 +6407,76 @@ table.running td {
     border-bottom: 1px solid #ddd;
 }
 
+table.running th {
+    text-align: center;
+}
+
+table.running td.host:before, table.running td.job:before {
+    content: '&nbsp;';
+    visibility: hidden;
+}
+
+
+table.running td.host, table.running td.job {
+    position: relative;
+}
+
+table.running td.host span, table.running td.host span {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+table.running td.host, table.running th.host  {
+    width: 25% !important;    
+}
+
+table.running td.job, table.running th.job {
+    width: 50% !important;
+}
+
+/* http://gka.github.io/palettes/#colors=,khaki,orange,deeppink,darkred|steps=8|bez=1|coL=1 */
+table.running tr.row7 td.thread {
+    background-color: #8b0000;
+    color: #6d6d6c;
+}
+
+table.running tr.row6 td.thread {
+    background-color: #ad102a;
+    color: #6d6d6c;
+}
+
+table.running tr.row5 td.thread {
+    background-color: #cb3044;
+    color: #6d6d6c;
+}
+
+table.running tr.row4 td.thread {
+    background-color: #e25153;
+    color: #6d6d6c;
+}
+
 table.running tr.row3 td.thread {
-    background-color: rgba(181, 106, 91, 0.8);
-    color: rgb(125, 65, 68);
+    background-color: #f37459;
+    color: #6d6d6c;
 }
 
 table.running tr.row2 td.thread {
-    background-color: rgba(132, 183, 97, 0.8);
-    color: rgb(88, 125, 59);
+    background-color: #fb9a5b;
+    color: #6d6d6c;
 }
 
 table.running tr.row1 td.thread {
-    background-color: rgba(242, 228, 97, 0.8);
-    color: rgb(125, 117, 62);
+    background-color: #fbc165;
+    color: #6d6d6c;
 }
 
 table.running tr.row0 td.thread {
-    background-color: rgba(146, 216, 242, 0.8);
-    color: rgb(71, 112, 124);
+    background-color: #f0e68c;
+    color: #6d6d6c;
 }
 
 .table.running th.status, .table.running th.thread {
@@ -6423,7 +6484,7 @@ table.running tr.row0 td.thread {
 }
 
 .numberPanel h1 {
-    font-size: 3.5em;
+    font-size: 3.2em;
 }
 
 .numberPanel .x_panel {

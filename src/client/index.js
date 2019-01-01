@@ -11,7 +11,8 @@ import Col from './col';
 var server = /server=([^&]+)/.exec(location.search)[1];
 var socket = window.io(server);
 
-const Arrow = () => (<div className="numberpanel-image-wrap"><img className="numberpanel-image" src="http://www.clker.com/cliparts/w/G/P/a/z/S/grey-right-arrow-hi.png" /></div>);
+const Arrow = (props) => (<div className="numberpanel-image-wrap"><img style={props.style || {}} className="numberpanel-image" src="http://www.clker.com/cliparts/w/G/P/a/z/S/grey-right-arrow-hi.png" /></div>);
+const ArrowBottom = () => (<img className="numberpanel-image-bottom" src="http://www.clker.com/cliparts/w/G/P/a/z/S/grey-right-arrow-hi.png" />);
 
 class Main extends React.Component {
 
@@ -35,21 +36,38 @@ class Main extends React.Component {
                     <Chart socket={socket} threads={this.props.threadsCount} onMount={() => NProgress.done()}/>
                 </Row>
                 <Row style={{alignItems: 'center', flexDirection: 'row', display: 'flex'}}>
-                    <NumberPanel isActive={this.state.queue == 'planned'} onClick={() => this.setActiveQueue('planned')} size="2" title={<span><i className={'fa fa-recycle'}></i> Scheduled</span>} right={<Arrow/>}>
-                        <h1><Counter event="plannedCount" socket={socket}/></h1>
-                    </NumberPanel>
-                    <NumberPanel isActive={this.state.queue == 'immediate'} onClick={() => this.setActiveQueue('immediate')} size="2" title={<span><i className={'fa fa-hourglass-start'}></i> Waiting</span>} right={<Arrow/>}>
-                        <h1><Counter event="waitingCount" socket={socket}/></h1>
-                    </NumberPanel>
-                    <NumberPanel size="5" title={<span><i className={'fa fa-refresh'}></i> Running</span>} right={<Arrow />}>
+                    <Col size="2">
+                        <Row>
+                            <NumberPanel style={{width: '100%'}} isActive={this.state.queue == 'planned'} onClick={() => this.setActiveQueue('planned')} size="2" title={<span><i className={'fa fa-recycle'}></i> Scheduled</span>}>
+                                <h1><Counter event="plannedCount" socket={socket}/></h1>
+                            </NumberPanel>
+                        </Row>
+                        <Row style={{height: 50, paddingRight: 50, position: 'relative', display: 'flex', justifyContent: 'center'}}>
+                            <ArrowBottom />
+                        </Row>
+                        <Row>
+                            <NumberPanel style={{width: '100%'}} isActive={this.state.queue == 'immediate'} onClick={() => this.setActiveQueue('immediate')} size="2" title={<span><i className={'fa fa-hourglass-start'}></i> Waiting</span>} right={<Arrow/>}>
+                                <h1><Counter event="waitingCount" socket={socket}/></h1>
+                            </NumberPanel>
+                        </Row>
+                    </Col>
+                    <NumberPanel size="8" title={<span><i className={'fa fa-refresh'}></i> Running</span>} right={<Arrow style={{margin: 0, top: 45}} />}>
                         <RunningJobsList queueName="immediate" socket={socket} threads={this.props.threadsCount}/>
                     </NumberPanel>
-                    <NumberPanel isActive={this.state.queue == 'history'} onClick={() => this.setActiveQueue('history')} size="2" title={<span><i className={'fa fa-check'}></i> Completed</span>} right={<Arrow/>}>
-                        <h1><Counter event="historyCount" socket={socket}/></h1>
-                    </NumberPanel>
-                    <Col size="1">
-                        <img style={{width: '50%', marginTop: -8, marginLeft: 20, opacity: .7}}
-                             src="http://downloadicons.net/sites/default/files/trash-can-symbol-icon-504.png"/>
+                    <Col size="2">
+                        <Row>
+                            <NumberPanel style={{width: '100%'}} isActive={this.state.queue == 'history'} onClick={() => this.setActiveQueue('history')} size="2" title={<span><i className={'fa fa-check'}></i> Completed</span>}>
+                                <h1><Counter event="historyCount" socket={socket}/></h1>
+                            </NumberPanel>
+                        </Row>
+                        <Row style={{height: 50, paddingRight: 50, position: 'relative', display: 'flex', justifyContent: 'center'}}>
+                            <ArrowBottom />
+                        </Row>
+                        <Row style={{width: '100%', margin: 0, paddingRight: 50, paddingTop: 5,  display: 'flex', justifyContent: 'center'}}>
+                                <img style={{width: 50, height: 60, opacity: .7}}
+                                    src="http://downloadicons.net/sites/default/files/trash-can-symbol-icon-504.png"/>
+                            
+                        </Row>
                     </Col>
                 </Row>
                 {this.state.queue == 'history' ?   <QueueJobsList socket={socket} title="Completed jobs list" queueName="history" columns={['reruninfo', 'finished', 'duration', 'host', 'job', 'output', 'status']} /> : null}
