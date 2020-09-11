@@ -24,6 +24,7 @@ app.use('/css', express.static('css'));
 app.use('/node_modules', express.static('node_modules'));
 app.use('/fonts', express.static('fonts'));
 app.use('/js', express.static('js'));
+app.use('/images', express.static('images'));
 
 app.get('*', (req, res) => {
   if (!req.query.server) {

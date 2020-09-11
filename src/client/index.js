@@ -11,8 +11,8 @@ import Col from './col';
 var server = /server=([^&]+)/.exec(location.search)[1];
 var socket = window.io(server);
 
-const Arrow = (props) => (<div className="numberpanel-image-wrap"><img style={props.style || {}} className="numberpanel-image" src="http://www.clker.com/cliparts/w/G/P/a/z/S/grey-right-arrow-hi.png" /></div>);
-const ArrowBottom = () => (<img className="numberpanel-image-bottom" src="http://www.clker.com/cliparts/w/G/P/a/z/S/grey-right-arrow-hi.png" />);
+const Arrow = (props) => (<div className="numberpanel-image-wrap"><img style={props.style || {}} className="numberpanel-image" src={'/images/grey-right-arrow-hi.png'} /></div>);
+const ArrowBottom = () => (<img className="numberpanel-image-bottom" src={'/images/grey-right-arrow-hi.png'} />);
 
 class Main extends React.Component {
 
@@ -64,9 +64,7 @@ class Main extends React.Component {
                             <ArrowBottom />
                         </Row>
                         <Row style={{width: '100%', margin: 0, paddingRight: 50, paddingTop: 5,  display: 'flex', justifyContent: 'center'}}>
-                                <img style={{width: 50, height: 60, opacity: .7}}
-                                    src="http://downloadicons.net/sites/default/files/trash-can-symbol-icon-504.png"/>
-                            
+                            <span><i className={'fa fa-trash fa-3x'}></i></span>
                         </Row>
                     </Col>
                 </Row>
