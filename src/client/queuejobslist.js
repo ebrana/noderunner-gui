@@ -31,7 +31,7 @@ export default class QueueJobsList extends React.Component {
 
     setFilterItem(key, value) {
         if (value && value.length > 0) {
-            this.state.filter[key] = value;
+            this.state.filter[key] = value.toString().trim();
         } else {
             delete this.state.filter[key];
         }
@@ -104,6 +104,7 @@ export class QueueJobsListFilterTr extends React.Component {
                                     <option>fetched</option>
                                     <option>success</option>
                                     <option>error</option>
+                                    <option>stucked</option>
                                 </select></th>);
                     } else if (title != 'duration' && title != 'finished' && title != 'reruninfo' && title != 'infoonly') {
                         return (<th key={idx}><input autoComplete="off" name={title} onChange={(e) => this.props.setFilterItem(e.target.name, e.target.value)} style={{width: '100%', fontWeight: 'normal'}} type="text"/></th>);
