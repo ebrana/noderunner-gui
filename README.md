@@ -1,32 +1,24 @@
-## Popis
+# test2
 
-Podrobný popis krok za krokem nalezente v [samostatném článku](http://www.dzejes.cz/prvni-dev-stack.html).
-
-## Před stažením
-
-Nainstalujte si [node.js](http://nodejs.org).
-Poté i (globálně) [gulp.js](http://gulpjs.com/).
-```shell
-npm install -g gulp
+## Project setup
 ```
-
-## Stažení
-
-```shell
-git clone https://github.com/tajo/javascript.git
-cd javascript/examples/dev-stack
 npm install
 ```
 
-## Začněte vyvíjet
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-- v terminálu napište `gulp`
-- otevřete prohlížeč na adrese [localhost:8000](http://localhost:8000)
+### Compiles and minifies for production
+```
+npm run build
+```
 
-## Produkční verze
+### Lints and fixes files
+```
+npm run lint
+```
 
-- v terminálu napište `gulp -p`
-
-## ESLint
-
-- v terminálu napište `gulp eslint`
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

@@ -1,6 +1,0 @@
-{
-  "port": 8000,
-  "servers": [
-    {"name": "localhost", "url":"localhost:8001"}
-  ]
-}
