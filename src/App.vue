@@ -82,18 +82,14 @@ import config from './../config/config.js'
     },
   },
   mounted() {
-    let store = this.$store;
-    let uri = window.location.search.substring(1);
+    const store = this.$store;
+    const uri = window.location.search.substring(1);
     this.basePath = window.location.origin;
     let params = new URLSearchParams(uri);
-    let socket;
-    let server: string | null = params.get("server");
-    if (server === null) {
-      server = config.servers[0].url;
-    }
+    const server: string | null = params.get("server") === null ? config.servers[0].url : params.get("server");
     store.dispatch('server', server)
     //@ts-ignore
-    socket = io(server);
+    const socket = io(server);
     if (socket) {
       for (let event in config.events) {
         //@ts-ignore
