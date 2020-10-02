@@ -10,6 +10,11 @@
   <div class="wall" v-if="this.$store.getters.threadsStats.length > 0 && this.$store.getters.threadsCount > 0">
     <Chart/>
   </div>
+  <div v-else class="d-flex justify-content-center mb-2">
+    <div class="spinner-grow" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
   <div>
     <div class="">
       <div class="container">
