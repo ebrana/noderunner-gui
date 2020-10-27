@@ -1,45 +1,36 @@
 <template>
-  <li :class=buttonClass>
-    <a class="nav-link" :href=url @click="changeSerer">{{ name }}</a>
-  </li>
+  <a class="btn btn-sm" v-bind:class="styleClass" @click="click"><i class="fa" v-bind:class="icon" v-if="text == null"></i><span v-else>{{ text }}</span></a>
 </template>
 
 <script lang="ts">
+
 import {defineComponent} from "vue";
 
-const Button = defineComponent({
+export default defineComponent({
+  name: "Button",
   props: {
-    name: {
-      type: String
+    'socket': {
+      type: Object
     },
-    url: {
-      type: String
+    'icon': {
+      type: String,
+      default: 'fa-plus-circle'
     },
-    basePath: {
-      type: String
+    'text': {
+      type: String,
+      default: null
+    },
+    'styleClass': {
+      type: String,
+      default: 'btn-success'
     }
   },
-  computed: {
-    buttonClass () {
-      //@ts-ignore
-      if (this.$store.state.server === this.url) {
-        return 'nav-item active'
-      } else {
-        return 'nav-item'
-      }
-      // console.log($store)
-    }
-  },
+  emits: ['button-click'],
   methods: {
-    'changeSerer': function (event: Event) {
-      event.preventDefault()
-      window.location.href = this.basePath + '?server=' + this.url
+    click: function () {
+      this.$emit('button-click');
     }
   }
-})
+});
 
-export default Button
 </script>
-
-<style>
-</style>
