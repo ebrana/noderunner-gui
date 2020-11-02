@@ -1,6 +1,10 @@
 <template>
   <Button @button-click="click" />
-  <Popup ref="popup" id="threadPopup" @submit="submit" content="Are you sure you want to add a thread?" confirm="true" title="Confirm dialog" />
+  <Popup ref="popup" id="threadPopup" @submit="submit" confirm="true" title="Confirm dialog">
+    <template v-slot:content>
+      <span>Are you sure you want to add a thread?</span>
+    </template>
+  </Popup>
 </template>
 
 <script lang="ts">

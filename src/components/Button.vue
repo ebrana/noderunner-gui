@@ -1,5 +1,5 @@
 <template>
-  <a class="btn btn-sm" v-bind:class="styleClass" @click="click"><i class="fa" v-bind:class="icon" v-if="text == null"></i><span v-else>{{ text }}</span></a>
+  <a class="btn btn-sm" v-bind:class="styleClass" @click="click"><i class="fa" v-bind:class="icon" v-if="showIcon"></i> <span>{{ text }}</span></a>
 </template>
 
 <script lang="ts">
@@ -23,6 +23,9 @@ export default defineComponent({
     'styleClass': {
       type: String,
       default: 'btn-success'
+    },
+    'showIcon': {
+      default: true
     }
   },
   emits: ['button-click'],

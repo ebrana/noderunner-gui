@@ -15,7 +15,7 @@
       <th scope="row">#{{ item.thread + 1 }}:</th>
       <td>{{ hostFormat(item) }}</td>
       <td>{{ item.job }}</td>
-      <td><span v-if="item.job" class="btn btn-sm btn-warning"><i class="fa fa-refresh"></i> {{ item.status }}</span></td>
+      <td><InfoButton :item="item" v-if="item.job" /></td>
       <td><span id="{{ item.thread }}">{{ runningHumanFormat(item) }}</span></td>
     </tr>
     </tbody>
@@ -24,6 +24,7 @@
 
 <script>
 import AddButton from './AddButton.vue';
+import InfoButton from './InfoButton.vue';
 import {defineComponent} from "vue";
 import {mapState} from "vuex";
 
@@ -35,7 +36,8 @@ const Treads = defineComponent({
     }
   },
   components: {
-    AddButton
+    AddButton,
+    InfoButton
   },
   methods: {
     //@ts-ignore

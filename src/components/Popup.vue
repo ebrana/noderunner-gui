@@ -9,11 +9,11 @@
           </button>
         </div>
         <div class="modal-body">
-          {{ content }}
+          <slot name="content"></slot>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="close">Close</button>
-          <button type="button" class="btn btn-primary" @click="submit"><span v-if="confirm">Yes</span><span v-else>Save</span></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="close">{{ closeButtonText}}</button>
+          <button type="button" class="btn btn-primary" @click="submit" v-if="showSubmitButton"><span v-if="confirm">Yes</span><span v-else>Save</span></button>
         </div>
       </div>
     </div>
@@ -34,12 +34,14 @@ export default {
       type: String,
       required: true
     },
-    'content': {
-      type: String,
-      default: ''
-    },
     'confirm': {
       default: false
+    },
+    'showSubmitButton': {
+      default: true
+    },
+    'closeButtonText': {
+      default: 'Close'
     }
   },
   data() {
@@ -66,9 +68,6 @@ export default {
   },
   emits: ['submit'],
   methods: {
-    accepted: () => {
-      console.log('accepted');
-    },
     close: function () {
       this.opened = false;
       setTimeout(()=> {
