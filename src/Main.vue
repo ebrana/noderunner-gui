@@ -89,6 +89,7 @@ const Main = defineComponent({
     })
   },
   mounted() {
+    //@ts-ignore
     const store = this.$store;
     const uri = window.location.search.substring(1);
     this.basePath = window.location.origin;
