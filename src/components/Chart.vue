@@ -27,7 +27,7 @@ const Chart = defineComponent({
       //@ts-ignore
       newThreadsStat: state => state.newThreadsStat,
       //@ts-ignore
-      invalidateChart: state => state.invalidateChart
+      invalidateChart: state => state.invalidateChart,
     })
   },
   methods: {
@@ -82,6 +82,10 @@ const Chart = defineComponent({
 
       chart.scrollbarX = new am4core.Scrollbar();
       chart.scrollbarX.parent = chart.bottomAxesContainer;
+
+      console.log(chart.colors.list);
+      //@ts-ignore
+      this.$store.dispatch('colors', chart.colors.list);
 
       return chart;
     }

@@ -15,7 +15,8 @@ export default createStore({
         threadsStats: [],
         runningJobsList: [],
         newThreadsStat: [],
-        invalidateChart: false
+        invalidateChart: false,
+        colors: []
     },
     mutations: {
         server(state, hostname) {
@@ -23,6 +24,9 @@ export default createStore({
         },
         invalidateChart(state, value) {
             state.invalidateChart = value;
+        },
+        colors(state, value) {
+            state.colors = value;
         },
         emitData(state, data) {
             let findIndex = false;
@@ -165,6 +169,9 @@ export default createStore({
         },
         invalidateChart(context, value) {
             context.commit('invalidateChart', value);
+        },
+        colors(context, value) {
+            context.commit('colors', value);
         }
     },
     getters: {
@@ -191,6 +198,9 @@ export default createStore({
         },
         invalidateChart: state => {
             return state.invalidateChart;
+        },
+        colors: state => {
+            return state.colors;
         }
     }
 });

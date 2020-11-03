@@ -5,14 +5,14 @@
     </thead>
     <tbody>
     <tr>
-      <th>thrd <AddButton :socket="socket" /></th>
+      <th class="index text-center">thrd <AddButton :socket="socket" /></th>
       <th>host</th>
       <th>job</th>
       <th>status</th>
       <th>running</th>
     </tr>
     <tr v-for="(item) in list" v-bind:key="item">
-      <th scope="row">#{{ item.thread + 1 }}:</th>
+      <th scope="row" v-bind:style="item.color" class="text-center">#{{ item.thread + 1 }}</th>
       <td>{{ hostFormat(item) }}</td>
       <td>{{ item.job }}</td>
       <td><InfoButton :item="item" v-if="item.job" /></td>
@@ -86,12 +86,13 @@ const Treads = defineComponent({
     ...mapState({
         //@ts-ignore
         runningJobsList: state => state.runningJobsList,
-        threadsCounter: state => state.threadsCounter
+        threadsCounter: state => state.threadsCounter,
+        colors: state => state.colors
     }),
     list() {
       let threads = [];
       for (let x = 0; x < this.threadsCounter; x++) {
-        threads.push({'thread': x, 'command': ''});
+        threads.push({'thread': x, 'command': '', 'color': 'background-color: ' + this.colors[x]});
       }
 
       for (let key in this.runningJobsList) {
@@ -101,6 +102,7 @@ const Treads = defineComponent({
         for (const index in threads) {
           if (threads[index].thread === thread) {
             threads[index] = this.runningJobsList[key];
+            threads[index]['color'] = 'background-color: ' + this.colors[index];
           }
         }
       }
@@ -115,5 +117,7 @@ export default Treads
 </script>
 
 <style scoped>
-
+.index {
+  width: 60px;
+}
 </style>
