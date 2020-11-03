@@ -7,7 +7,7 @@
     <tr>
       <th class="index text-center">thrd <AddButton :socket="socket" /></th>
       <th>host</th>
-      <th class="job col-xs-2">job</th>
+      <th class="job col-xs-10">job</th>
       <th>status</th>
       <th>running</th>
       <th>actions</th>
@@ -18,13 +18,26 @@
       <td class="job" v-bind:title="item.job">{{ item.job }}</td>
       <td><InfoButton :item="item" v-if="item.job" /></td>
       <td><span id="{{ item.thread }}">{{ runningHumanFormat(item) }}</span></td>
-      <td>&nbsp;</td>
+      <td>
+        <a class="btn btn-sm btn-info"><i class="fa fa-pencil-square-o"></i></a>
+        &nbsp;
+        <Button @button-click="click(item.thread)" icon="fa-trash" styleClass="btn-danger"/>
+      </td>
     </tr>
     </tbody>
   </table>
+  <Popup ref="popup" id="threadPopupDelete" @submit="submit" confirm="true" title="Confirm dialog" submitButtonClass="btn-danger">
+    <template v-slot:content="{ persistent }">
+      <span>Are you sure you want to delete a thread #{{ persistent.id+1 }} ?</span>
+    </template>
+  </Popup>
 </template>
 
 <script>
+//@ts-ignore
+import Button from "./../Button";
+//@ts-ignore
+import Popup from "./../Popup";
 import AddButton from './AddButton.vue';
 import InfoButton from './InfoButton.vue';
 import {defineComponent} from "vue";
@@ -38,10 +51,22 @@ const Treads = defineComponent({
     }
   },
   components: {
+    Button,
     AddButton,
-    InfoButton
+    InfoButton,
+    Popup
   },
   methods: {
+    click: function (id) {
+      //@ts-ignore
+      this.$refs.popup.open({'id':id});
+    },
+    submit: function (record, persistent) {
+      //@ts-ignore
+      this.socket.emit('delThread', [persistent.id]);
+      //@ts-ignore
+      this.$store.dispatch('invalidateChart', true);
+    },
     //@ts-ignore
     hostFormat(item) {
       let host = '';

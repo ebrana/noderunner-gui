@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:id="id" v-if="closed === false" v-bind:class="popupStyle" tabindex="-1" role="dialog" v-bind:style="style">
+  <div @keyup.esc="close()" v-bind:id="id" v-if="closed === false" v-bind:class="popupStyle" tabindex="-1" role="dialog" v-bind:style="style">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -8,12 +8,13 @@
             <span aria-hidden="true" @click="close">×</span>
           </button>
         </div>
-        <div class="modal-body">
-          <slot name="content"></slot>
+        <div class="modal-body text-left">
+          <slot name="content" :persistent="persistent"></slot>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="close">{{ closeButtonText}}</button>
-          <button type="button" class="btn btn-primary" @click="submit" v-if="showSubmitButton"><span v-if="confirm">Yes</span><span v-else>Save</span></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="close">{{ closeButtonText }}</button>
+          <button type="button" class="btn" v-bind:class="submitButtonClass" @click="submit" v-if="showSubmitButton"><span v-if="confirm">Yes</span><span
+              v-else>Save</span></button>
         </div>
       </div>
     </div>
@@ -42,6 +43,9 @@ export default {
     },
     'closeButtonText': {
       default: 'Close'
+    },
+    'submitButtonClass': {
+      default: 'btn-primary'
     }
   },
   data() {
@@ -49,6 +53,7 @@ export default {
       opened: false,
       closed: true,
       style: 'display: block; padding-right: 14px;',
+      persistent: {}
     }
   },
   computed: {
@@ -69,21 +74,26 @@ export default {
   emits: ['submit'],
   methods: {
     close: function () {
+      // console.log('remove listener dialog ' + this.id);
+      window.removeEventListener('keyup', this.close);
       this.opened = false;
-      setTimeout(()=> {
+      setTimeout(() => {
         this.closed = true;
       }, 400);
     },
-    open: function () {
-      setTimeout(()=> {
+    open: function (persistent) {
+      // console.log('add listener dialog ' + this.id);
+      window.addEventListener('keyup', (event) => { if (event.key === 'Escape') this.close() });
+      setTimeout(() => {
         this.opened = true;
       }, 20);
       this.closed = false;
+      this.persistent = persistent;
     },
-    submit () {
+    submit() {
       this.close();
       let record = {};
-      this.$emit('submit', record);
+      this.$emit('submit', record, this.persistent);
     }
   }
 }

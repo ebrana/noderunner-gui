@@ -2,7 +2,7 @@
   <Button @button-click="click" />
   <Popup ref="popup" id="threadPopup" @submit="submit" confirm="true" title="Confirm dialog">
     <template v-slot:content>
-      <span>Are you sure you want to add a thread?</span>
+      <span class="text-justify font-weight-normal">Are you sure you want to add a thread?</span>
     </template>
   </Popup>
 </template>
