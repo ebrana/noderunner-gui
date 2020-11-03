@@ -97,7 +97,7 @@ const Main = defineComponent({
     const server: string | null = params.get("server") === null ? config.servers[0].url : params.get("server");
     store.dispatch('server', server)
     //@ts-ignore
-    const socket = io(server);
+    const socket = this.socket = io(server);
     if (socket) {
       for (let event in config.events) {
         //@ts-ignore

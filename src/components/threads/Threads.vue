@@ -1,22 +1,24 @@
 <template>
   <table border="0" width="30%" class="table threads">
     <thead class="thead-light text-center">
-    <th colspan="5"><i class="fa fa-refresh"></i> running</th>
+    <th colspan="6"><i class="fa fa-refresh"></i> running</th>
     </thead>
     <tbody>
     <tr>
       <th class="index text-center">thrd <AddButton :socket="socket" /></th>
       <th>host</th>
-      <th>job</th>
+      <th class="job col-xs-2">job</th>
       <th>status</th>
       <th>running</th>
+      <th>actions</th>
     </tr>
     <tr v-for="(item) in list" v-bind:key="item">
       <th scope="row" v-bind:style="item.color" class="text-center">#{{ item.thread + 1 }}</th>
       <td>{{ hostFormat(item) }}</td>
-      <td>{{ item.job }}</td>
+      <td class="job" v-bind:title="item.job">{{ item.job }}</td>
       <td><InfoButton :item="item" v-if="item.job" /></td>
       <td><span id="{{ item.thread }}">{{ runningHumanFormat(item) }}</span></td>
+      <td>&nbsp;</td>
     </tr>
     </tbody>
   </table>
@@ -118,6 +120,12 @@ export default Treads
 
 <style scoped>
 .index {
-  width: 60px;
+  width: 90px;
+}
+.job {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 340px;
 }
 </style>

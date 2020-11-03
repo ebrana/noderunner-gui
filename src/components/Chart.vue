@@ -82,8 +82,7 @@ const Chart = defineComponent({
 
       chart.scrollbarX = new am4core.Scrollbar();
       chart.scrollbarX.parent = chart.bottomAxesContainer;
-
-      console.log(chart.colors.list);
+      
       //@ts-ignore
       this.$store.dispatch('colors', chart.colors.list);
 
