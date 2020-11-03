@@ -94,7 +94,7 @@ const Treads = defineComponent({
     list() {
       let threads = [];
       for (let x = 0; x < this.threadsCounter; x++) {
-        threads.push({'thread': x, 'command': '', 'color': 'background-color: ' + this.colors[x]});
+        threads.push({'thread': x, 'command': '', 'color': 'background-color: ' + this.colors[x*2]});
       }
 
       for (let key in this.runningJobsList) {
@@ -104,7 +104,8 @@ const Treads = defineComponent({
         for (const index in threads) {
           if (threads[index].thread === thread) {
             threads[index] = this.runningJobsList[key];
-            threads[index]['color'] = 'background-color: ' + this.colors[index];
+            const colorKey = index*2;
+            threads[index]['color'] = 'background-color: ' + this.colors[colorKey];
           }
         }
       }
