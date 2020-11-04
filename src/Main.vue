@@ -1,4 +1,5 @@
 <template>
+  <Preloader />
   <div class="jumbotron">
     <div class="">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -20,19 +21,19 @@
       <div class="">
         <div class="container">
           <div class="row">
-            <div class="col">
+            <div class="col-md">
               <Counter title="Scheduled" icon="fa fa-recycle" :value="plannedCounter"/>
             </div>
             <div class="col-1">
               <img class="arrow" src="images/grey-right-arrow-hi.png" alt=""/>
             </div>
-            <div class="col">
+            <div class="col-md">
               <Counter title="Waiting" icon="fa fa-hourglass-start" :value="waitingCounter"/>
             </div>
             <div class="col-1">
               <img class="arrow" src="images/grey-right-arrow-hi.png" alt=""/>
             </div>
-            <div class="col">
+            <div class="col-md">
               <Counter title="Completed" icon="fa fa-check" :value="historyCounter"/>
             </div>
           </div>
@@ -47,6 +48,7 @@
 </template>
 
 <script lang="ts">
+import Preloader from './components/Preloader.vue';
 import Chart from './components/Chart.vue';
 import MenuButton from './components/MenuButton.vue';
 import Counter from './components/Counter.vue';
@@ -64,6 +66,7 @@ const Main = defineComponent({
     MenuButton,
     Counter,
     Threads,
+    Preloader
   },
   setup() {
     let buttons = config.servers;

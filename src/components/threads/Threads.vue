@@ -1,32 +1,32 @@
 <template>
-  <table border="0" width="30%" class="table threads">
+  <table border="0" width="30%" class="table table-responsive-lg threads">
     <thead class="thead-light text-center">
     <th colspan="6"><i class="fa fa-refresh"></i> running</th>
     </thead>
     <tbody>
     <tr>
-      <th class="index text-center">thrd <AddButton :socket="socket" /></th>
-      <th>host</th>
-      <th class="job col-xs-10">job</th>
-      <th>status</th>
-      <th>running</th>
-      <th>actions</th>
+      <th class="index text-center align-middle">thrd <AddButton :socket="socket" /></th>
+      <th class="align-middle">host</th>
+      <th class="job align-middle">job</th>
+      <th class="align-middle">status</th>
+      <th class="running align-middle">running</th>
+      <th class="align-middle">actions</th>
     </tr>
     <tr v-for="(item) in list" v-bind:key="item">
-      <th scope="row" v-bind:style="item.color" class="text-center">#{{ item.thread + 1 }}</th>
-      <td>{{ hostFormat(item) }}</td>
-      <td class="job" v-bind:title="item.job">{{ item.job }}</td>
-      <td><InfoButton :item="item" v-if="item.job" /></td>
-      <td><span id="{{ item.thread }}">{{ runningHumanFormat(item) }}</span></td>
-      <td>
-        <a class="btn btn-sm btn-info"><i class="fa fa-pencil-square-o"></i></a>
+      <th scope="row" v-bind:style="item.color" class="text-center align-middle">#{{ item.thread + 1 }}</th>
+      <td class="align-middle">{{ hostFormat(item) }}</td>
+      <td class="job align-middle" v-bind:title="item.job">{{ item.job }}</td>
+      <td colspan="align-middle"><InfoButton :item="item" v-if="item.job" /></td>
+      <td class="running align-middle"><span id="{{ item.thread }}">{{ runningHumanFormat(item) }}</span></td>
+      <td class="align-middle">
+        <a class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
         &nbsp;
         <Button @button-click="click(item.thread)" icon="fa-trash" styleClass="btn-danger"/>
       </td>
     </tr>
     </tbody>
   </table>
-  <Popup ref="popup" id="threadPopupDelete" @submit="submit" confirm="true" title="Confirm dialog" submitButtonClass="btn-danger">
+  <Popup ref="popup" id="threadPopupDelete" @submit="removeThreade" confirm="true" title="Confirm dialog" submitButtonClass="btn-danger">
     <template v-slot:content="{ persistent }">
       <span>Are you sure you want to delete a thread #{{ persistent.id+1 }} ?</span>
     </template>
@@ -61,7 +61,9 @@ const Treads = defineComponent({
       //@ts-ignore
       this.$refs.popup.open({'id':id});
     },
-    submit: function (record, persistent) {
+    removeThreade: function (record, persistent) {
+      //@ts-ignore
+      this.$store.dispatch('showPreloader', true);
       //@ts-ignore
       this.socket.emit('delThread', [persistent.id]);
       //@ts-ignore
@@ -152,6 +154,11 @@ export default Treads
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 340px;
+  width: 30%;
+  max-width: 300px;
+}
+.running {
+  width: 10%;
+  max-width: 180px;
 }
 </style>

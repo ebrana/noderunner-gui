@@ -16,11 +16,15 @@ export default createStore({
         runningJobsList: [],
         newThreadsStat: [],
         invalidateChart: false,
-        colors: []
+        colors: [],
+        showPreloader: true
     },
     mutations: {
+        showPreloader(state, value) {
+            state.showPreloader = value;
+        },
         server(state, hostname) {
-            state.server = hostname
+            state.server = hostname;
         },
         invalidateChart(state, value) {
             state.invalidateChart = value;
@@ -53,6 +57,7 @@ export default createStore({
                     break;
                 case 'threadsCount':
                     state.threadsCounter = data.value;
+                    state.showPreloader = false;
                     break;
                 case 'plannedCount':
                     state.plannedCounter = data.value;
@@ -172,6 +177,9 @@ export default createStore({
         },
         colors(context, value) {
             context.commit('colors', value);
+        },
+        showPreloader(context, value) {
+            context.commit('showPreloader', value);
         }
     },
     getters: {
@@ -201,6 +209,9 @@ export default createStore({
         },
         colors: state => {
             return state.colors;
+        },
+        showPreloader: state => {
+            return state.showPreloader;
         }
     }
 });
