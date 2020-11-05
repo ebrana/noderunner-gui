@@ -4,9 +4,14 @@
     <div class="">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand">Servers</a>
-        <ul class="navbar-nav mr-auto">
-          <MenuButton v-for="item in buttons" :key="item.name" :name="item.name" :url="item.url" :basePath="basePath"></MenuButton>
-        </ul>
+        <button @click="collapsing" class="navbar-toggler collapsed" type="button">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse" v-bind:class="collapsingClass" v-bind:style="collapsingStyle" id="serversMenu">
+          <ul class="navbar-nav mr-auto">
+            <MenuButton v-for="item in buttons" :key="item.name" :name="item.name" :url="item.url" :basePath="basePath"></MenuButton>
+          </ul>
+        </div>
       </nav>
     </div>
     <div class="wall" v-if="this.$store.getters.threadsStats.length > 0 && this.$store.getters.threadsCount > 0">
@@ -68,6 +73,13 @@ const Main = defineComponent({
     Threads,
     Preloader
   },
+  data: () => {
+    return {
+      collapsed: false,
+      collapsingClass: 'collapse',
+      collapsingStyle: ''
+    }
+  },
   setup() {
     let buttons = config.servers;
     let basePath = '';
@@ -107,6 +119,33 @@ const Main = defineComponent({
         socket.on(config.events[event].event, (data) => {
           store.dispatch('emitData', {key: event, value: data});
         })
+      }
+    }
+  },
+  methods: {
+    collapsing: function () {
+      if (this.collapsed === false) {
+        this.collapsingClass = 'collapsing';
+        this.collapsingStyle = 'height: 0px';
+        setTimeout(() => {
+          this.collapsingStyle = 'height: ' + this.buttons.length * 40 + 'px';
+          setTimeout(() => {
+            this.collapsingStyle = '';
+            this.collapsingClass = 'show';
+            this.collapsed = true;
+          }, 150)
+        }, 30)
+      } else {
+        this.collapsingClass = 'collapsing';
+        this.collapsingStyle = 'height: ' + this.buttons.length * 40 + 'px';
+        setTimeout(() => {
+          this.collapsingStyle = 'height: 0px'
+          setTimeout(() => {
+            this.collapsingStyle = '';
+            this.collapsingClass = 'collapse';
+            this.collapsed = false;
+          }, 150)
+        }, 30)
       }
     }
   }
