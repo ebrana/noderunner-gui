@@ -26,7 +26,7 @@
         </tr>
         <tr>
           <th>added</th>
-          <td>{{ item.added }}</td>
+          <td>{{ humanDate(item.added) }}</td>
         </tr>
         <tr>
           <th>schedule</th>
@@ -42,7 +42,7 @@
         </tr>
         <tr>
           <th>started</th>
-          <td>{{ item.started }}</td>
+          <td>{{ humanDate(item.started) }}</td>
         </tr>
         <tr>
           <th>thread</th>
@@ -81,6 +81,17 @@ const InfoButton = defineComponent({
     click: function () {
       //@ts-ignore
       this.$refs.popup.open();
+    },
+    humanDate: (timestamp: number) => {
+      const date = new Date(timestamp*1000)
+      const hours = date.getHours();
+      const minutes = "0" + date.getMinutes();
+      const seconds = "0" + date.getSeconds();
+      const day = "0" + date.getDate();
+      const month = "0" + (date.getMonth() + 1);
+      const year = date.getFullYear();
+
+      return day.substr(-2) + '. ' + month.substr(-2) + '. ' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
     }
   }
 });
