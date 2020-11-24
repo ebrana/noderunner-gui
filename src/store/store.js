@@ -84,13 +84,6 @@ export default createStore({
                     if (Object.keys(state.runningJobsList).length === 0) { // min lenght 1
                         // @ts-ignore
                         state.runningJobsList.push({'thread': 0, 'command': ''})
-                    } else {
-                        for (let index in state.runningJobsList) {
-                            state.runningJobsList[index]['timer'] = setInterval(()=> {
-                                // kazdych 5 sekund pustit nad danym thread id
-                                state.runningJobsList[index].runningTime += 5;
-                            }, 5000, index);
-                        }
                     }
                     break;
                 case 'jobFetched':
@@ -98,22 +91,11 @@ export default createStore({
                     for (let index in state.runningJobsList) {
                         // @ts-ignore
                         if (state.runningJobsList[index].thread == data.value.thread) {
-                            const old = state.runningJobsList[index];
+                            // const old = state.runningJobsList[index];
                             // @ts-ignore
                             state.runningJobsList[index] = data.value;
-                            state.runningJobsList[index]['old'] = old;
+                            // state.runningJobsList[index]['old'] = old;
                             findIndex = true;
-
-                            if (config.events[data.key].event === 'jobStarted') {
-                                state.runningJobsList[index].runningTime = 0;
-                                state.runningJobsList[index]['timer'] = setInterval(()=> {
-                                    if (state.runningJobsList[index]) {
-                                        // kazdych 5 sekund pustit nad danym thread id
-                                        state.runningJobsList[index].runningTime += 5;
-                                    }
-                                }, 5000, index, state);
-                                // console.log('naplanovan index ', index)
-                            }
                             break;
                         }
                     }
@@ -126,7 +108,6 @@ export default createStore({
                     for (const item in state.runningJobsList) {
                         // @ts-ignore
                         if (state.runningJobsList[item]._id == data.value._id) {
-                            clearInterval(state.runningJobsList[item]['timer']);
                             // console.log('odebran index ', item, state.runningJobsList[item].runningTime)
                             // @ts-ignore
                             state.runningJobsList[item] = {'thread': parseInt(item), 'command': '', 'old': state.runningJobsList[item]}
@@ -144,16 +125,6 @@ export default createStore({
                     });
                     break;
                 case 'newThreadsStat':
-                    // dataProvider = state.threadsStats.slice(0);
-                    // dataProvider.push(() => {
-                    //     let d = data.value;
-                    //     d.date = new Date(d.intervalTo*1000)
-                    //     for (const i in d.byThread) {
-                    //         d['thread'+(i)] = d.byThread[i];
-                    //     }
-                    //     return d;
-                    // });
-                    // state.newThreadsStat = dataProvider;
                     dataProvider = data.value;
                     dataProvider.date = new Date(dataProvider.intervalTo*1000)
                     for (const i in dataProvider.byThread) {

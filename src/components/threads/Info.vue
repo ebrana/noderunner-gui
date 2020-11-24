@@ -1,6 +1,5 @@
 <template>
-  <Button @button-click="click" icon="fa-refresh" :text="item.status" styleClass="btn-warning"/>
-  <Popup ref="popup" id="threadInfoPopup" :showSubmitButton="false" closeButtonText="Ok" title="Job details">
+  <Popup ref="popup" id="threadInfoPopup" :showSubmitButton="false" closeButtonText="Ok" title="Job details" @close="close">
     <template v-slot:content>
       <table class="table table-sm table-striped table-borderless">
         <tbody>
@@ -62,14 +61,11 @@
 
 import {defineComponent} from "vue";
 //@ts-ignore
-import Button from "./../Button";
-//@ts-ignore
 import Popup from "./../Popup";
 
-const InfoButton = defineComponent({
-  name: "InfoButton",
+const Info = defineComponent({
+  name: "Info",
   components: {
-    Button,
     Popup
   },
   props: {
@@ -77,10 +73,15 @@ const InfoButton = defineComponent({
       type: Object
     },
   },
+  mounted() {
+    //@ts-ignore
+    this.$refs.popup.open();
+  },
+  emits: ['close'],
   methods: {
-    click: function () {
+    close: function () {
       //@ts-ignore
-      this.$refs.popup.open();
+      this.$emit('close');
     },
     humanDate: (timestamp: number) => {
       const date = new Date(timestamp*1000)
@@ -96,6 +97,6 @@ const InfoButton = defineComponent({
   }
 });
 
-export default InfoButton
+export default Info
 
 </script>

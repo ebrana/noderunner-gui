@@ -73,7 +73,7 @@ export default {
       return 'modal-backdrop';
     },
   },
-  emits: ['submit'],
+  emits: ['submit','close'],
   methods: {
     close: function () {
       // console.log('remove listener dialog ' + this.id);
@@ -81,6 +81,8 @@ export default {
       this.opened = false;
       setTimeout(() => {
         this.closed = true;
+        //@ts-ignore
+        this.$emit('close'); // after submit
       }, 400);
     },
     open: function (persistent) {
@@ -93,9 +95,9 @@ export default {
       this.persistent = persistent;
     },
     submit() {
-      this.close();
       let record = {};
       this.$emit('submit', record, this.persistent);
+      this.close();
     }
   }
 }

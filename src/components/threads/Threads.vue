@@ -13,16 +13,7 @@
       <th class="align-middle">actions</th>
     </tr>
     <tr v-for="(item) in list" v-bind:key="item">
-      <th scope="row" v-bind:style="item.color" class="text-center align-middle">#{{ item.thread + 1 }}</th>
-      <td class="align-middle">{{ hostFormat(item) }}</td>
-      <td class="job align-middle" v-bind:title="item.job">{{ item.job }}</td>
-      <td colspan="align-middle"><InfoButton :item="item" v-if="item.job" /></td>
-      <td class="running align-middle"><span id="{{ item.thread }}">{{ runningHumanFormat(item) }}</span></td>
-      <td class="align-middle">
-        <a class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
-        &nbsp;
-        <Button @button-click="click(item.thread)" icon="fa-trash" styleClass="btn-danger"/>
-      </td>
+      <Process :colors="colors" :item="item" @dbclick="click" @info="info" />
     </tr>
     </tbody>
   </table>
@@ -31,15 +22,15 @@
       <span>Are you sure you want to delete a thread #{{ persistent.id+1 }} ?</span>
     </template>
   </Popup>
+  <Info :item="infoItem" v-if="infoItem" @close="infoClose" />
 </template>
 
 <script>
-//@ts-ignore
-import Button from "./../Button";
-//@ts-ignore
+
 import Popup from "./../Popup";
 import AddButton from './AddButton.vue';
-import InfoButton from './InfoButton.vue';
+import Info from './Info.vue';
+import Process from './Process.vue';
 import {defineComponent} from "vue";
 import {mapState} from "vuex";
 
@@ -50,16 +41,27 @@ const Treads = defineComponent({
       type: Object
     }
   },
+  data() {
+    return {
+      'infoItem': null
+    }
+  },
   components: {
-    Button,
     AddButton,
-    InfoButton,
-    Popup
+    Popup,
+    Process,
+    Info
   },
   methods: {
     click: function (id) {
       //@ts-ignore
       this.$refs.popup.open({'id':id});
+    },
+    info: function (item) {
+      this.infoItem = item;
+    },
+    infoClose: function () {
+      this.infoItem = null;
     },
     removeThreade: function (record, persistent) {
       //@ts-ignore
@@ -113,7 +115,6 @@ const Treads = defineComponent({
   },
   computed: {
     ...mapState({
-        //@ts-ignore
         runningJobsList: state => state.runningJobsList,
         threadsCounter: state => state.threadsCounter,
         colors: state => state.colors
@@ -121,7 +122,7 @@ const Treads = defineComponent({
     list() {
       let threads = [];
       for (let x = 0; x < this.threadsCounter; x++) {
-        threads.push({'thread': x, 'command': '', 'color': 'background-color: ' + this.colors[x*2]});
+        threads.push({'thread': x, 'command': ''});
       }
 
       for (let key in this.runningJobsList) {
@@ -131,8 +132,6 @@ const Treads = defineComponent({
         for (const index in threads) {
           if (threads[index].thread === thread) {
             threads[index] = this.runningJobsList[key];
-            const colorKey = index*2;
-            threads[index]['color'] = 'background-color: ' + this.colors[colorKey];
           }
         }
       }
@@ -149,16 +148,5 @@ export default Treads
 <style scoped>
 .index {
   width: 90px;
-}
-.job {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 30%;
-  max-width: 300px;
-}
-.running {
-  width: 10%;
-  max-width: 180px;
 }
 </style>
