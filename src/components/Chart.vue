@@ -28,6 +28,10 @@ const Chart = defineComponent({
       newThreadsStat: state => state.newThreadsStat,
       //@ts-ignore
       invalidateChart: state => state.invalidateChart,
+      //@ts-ignore
+      threadsCounter: state => state.threadsCounter,
+      //@ts-ignore
+      threadsStats: state => state.threadsStats
     })
   },
   methods: {
@@ -39,11 +43,10 @@ const Chart = defineComponent({
       chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
 
       //@ts-ignore
-      chart.data = this.$store.getters.threadsStats;
+      chart.data = this.threadsStats;
 
       chart.colors.step = 2;
       chart.padding(30, 30, 10, 30);
-      // chart.legend = new am4charts.Legend();
 
       const categoryAxis = chart.xAxes.push(new am4charts.DateAxis());
       categoryAxis.renderer.grid.template.location = 0;
@@ -52,15 +55,15 @@ const Chart = defineComponent({
       valueAxis.min = 0;
 
       //@ts-ignore
-      if (this.$store.getters.threadsCount < 11) {
+      if (this.threadsCounter < 11) {
         //@ts-ignore
-        valueAxis.renderer.minGridDistance = parseInt(110 / this.$store.getters.threadsCount);
+        valueAxis.renderer.minGridDistance = parseInt(110 / this.threadsCounter);
       } else {
         valueAxis.renderer.minGridDistance = 20;
       }
 
       //@ts-ignore
-      valueAxis.max = this.$store.getters.threadsCount;
+      valueAxis.max = this.threadsCounter;
       valueAxis.strictMinMax = true;
       valueAxis.calculateTotals = false;
       valueAxis.renderer.minWidth = 100;
@@ -68,9 +71,8 @@ const Chart = defineComponent({
       valueAxis.tooltip.disabled = true;
 
       //@ts-ignore
-      for (let key = 0; key < this.$store.getters.threadsCount; key++) {
+      for (let key = 0; key < this.threadsCounter; key++) {
         const series = chart.series.push(new am4charts.LineSeries());
-        // series.name = "Series 1";
         series.dataFields.dateX = "date";
         series.dataFields.valueY = "thread" + key;
         series.stacked = true;
@@ -82,7 +84,7 @@ const Chart = defineComponent({
 
       chart.scrollbarX = new am4core.Scrollbar();
       chart.scrollbarX.parent = chart.bottomAxesContainer;
-      
+
       //@ts-ignore
       this.$store.dispatch('colors', chart.colors.list);
 

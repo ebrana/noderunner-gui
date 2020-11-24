@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {mapState} from "vuex";
 
 const MenuButton = defineComponent({
   props: {
@@ -20,9 +21,13 @@ const MenuButton = defineComponent({
     }
   },
   computed: {
+    ...mapState({
+      //@ts-ignore
+      server: state => state.server,
+    }),
     buttonClass () {
       //@ts-ignore
-      if (this.$store.state.server === this.url) {
+      if (this.server === this.url) {
         return 'nav-item active'
       } else {
         return 'nav-item'

@@ -14,7 +14,7 @@
         </div>
       </nav>
     </div>
-    <div class="wall" v-if="this.$store.getters.threadsStats.length > 0 && this.$store.getters.threadsCount > 0">
+    <div class="wall" v-if="threadsStats.length > 0 && threadsCounter > 0">
       <Chart/>
     </div>
     <div v-else class="d-flex justify-content-center mb-2">
@@ -95,6 +95,8 @@ const Main = defineComponent({
     ...mapState({
       //@ts-ignore
       threadsCounter: state => state.threadsCounter,
+      //@ts-ignore
+      threadsStats: state => state.threadsStats,
       //@ts-ignore
       historyCounter: state => state.historyCounter,
       //@ts-ignore

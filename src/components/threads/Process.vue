@@ -91,15 +91,15 @@ const Process = defineComponent({
           const elapsed = runningTime; // in second
 
           if (elapsed < msPerMinute) {
-            return Math.round(elapsed) + ' seconds ago';
+            return Math.round(elapsed) + 's';
           } else if (elapsed < msPerHour) {
-            return Math.floor(elapsed / msPerMinute) + ' minutes ago';
+            return Math.floor(elapsed / msPerMinute) + 'min';
           } else if (elapsed < msPerDay) {
-            return Math.floor(elapsed / msPerHour) + ' hours ago';
+            return Math.floor(elapsed / msPerHour) + 'hrs';
           } else if (elapsed < msPerYear) {
-            return 'approximately ' + Math.floor(elapsed / msPerMonth) + ' months ago';
+            return Math.floor(elapsed / msPerMonth) + 'mths';
           } else {
-            return 'approximately ' + Math.floor(elapsed / msPerYear) + ' years ago';
+            return Math.floor(elapsed / msPerYear) + 'yrs';
           }
       } else {
         return '-';

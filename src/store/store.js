@@ -91,10 +91,8 @@ export default createStore({
                     for (let index in state.runningJobsList) {
                         // @ts-ignore
                         if (state.runningJobsList[index].thread == data.value.thread) {
-                            // const old = state.runningJobsList[index];
                             // @ts-ignore
                             state.runningJobsList[index] = data.value;
-                            // state.runningJobsList[index]['old'] = old;
                             findIndex = true;
                             break;
                         }
@@ -110,7 +108,7 @@ export default createStore({
                         if (state.runningJobsList[item]._id == data.value._id) {
                             // console.log('odebran index ', item, state.runningJobsList[item].runningTime)
                             // @ts-ignore
-                            state.runningJobsList[item] = {'thread': parseInt(item), 'command': '', 'old': state.runningJobsList[item]}
+                            state.runningJobsList[item] = {'thread': parseInt(item), 'command': ''}
                             break;
                         }
                     }
