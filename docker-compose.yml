@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+  server:
+    image: ebrana-node
+    build:
+      context: ./docker
+      dockerfile: node/Dockerfile
+    networks:
+      - ebrana_platform_network
+    ports:
+      - '8080:8080'
+    volumes:
+      - .:/var/www/html
+    entrypoint: ["npm", "run", "serve"]
+  u_npm:
+    image: ebrana-node
+    build:
+      context: ./docker
+      dockerfile: node/Dockerfile
+    networks:
+      - ebrana_platform_network
+    volumes:
+      - .:/var/www/html
+    entrypoint: ["npm"]
+
+networks:
+  ebrana_platform_network:
