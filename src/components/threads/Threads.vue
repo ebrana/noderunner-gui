@@ -32,9 +32,13 @@
 
 <script lang="ts">
 
+//@ts-ignore
 import Popup from "./../Popup";
+//@ts-ignore
 import AddButton from './AddButton.vue';
+//@ts-ignore
 import Info from './Info.vue';
+//@ts-ignore
 import Process from './Process.vue';
 import {defineComponent} from "vue";
 import {mapState} from "vuex";
