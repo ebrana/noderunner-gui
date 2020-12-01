@@ -27,7 +27,7 @@
       <span>Are you sure you want to delete a thread #{{ persistent.id+1 }} ?</span>
     </template>
   </Popup>
-  <Info :item="infoItem" v-if="infoItem" @close="infoClose" />
+  <Info :item="infoItem" v-if="infoItem._id" @close="infoClose" />
 </template>
 
 <script lang="ts">
@@ -45,6 +45,19 @@ import {mapState} from "vuex";
 //@ts-ignore
 import Form from "./Form";
 
+interface iSettingForm {
+  'include': Array<String>,
+  'exclude': Array<String>,
+  'implementation': String
+}
+
+interface iJob {
+  'runningTime': number,
+  'host': string,
+  'basePath': string,
+  '_id': string
+}
+
 const Treads = defineComponent({
   name: "Treads",
   props: {
@@ -54,7 +67,8 @@ const Treads = defineComponent({
   },
   data() {
     return {
-      'infoItem': null
+      'infoItem': {
+      } as iJob
     }
   },
   components: {
@@ -73,19 +87,22 @@ const Treads = defineComponent({
       //@ts-ignore
       this.$refs.editpopup.open({'id':id});
     },
-    submit: function (record, persistent) {
-      console.log(record, persistent);
-      //@ts-ignore
-      // this.socket.emit('addThread');
-
+    submit: function (record: iSettingForm, persistent: Object) {
+      // @ts-ignore
+      this.socket.emit('updateThreadSetting', { 'id': persistent.id, setting: record})
     },
-    info: function (item) {
+    info: function (item: iJob) {
       this.infoItem = item;
     },
     infoClose: function () {
-      this.infoItem = null;
+      this.infoItem = {
+        'runningTime': 0,
+        'host': '',
+        'basePath': '',
+        '_id': ''
+      };
     },
-    removeThreade: function (record, persistent) {
+    removeThreade: function (record: iSettingForm, persistent: Object) {
       //@ts-ignore
       this.$store.dispatch('showPreloader', true);
       //@ts-ignore
@@ -94,9 +111,9 @@ const Treads = defineComponent({
       this.$store.dispatch('invalidateChart', true);
     },
     //@ts-ignore
-    hostFormat(item) {
+    hostFormat(item: iJob) {
       let host = '';
-      if (item._id !== undefined) {
+      if (item._id != undefined) {
         if (item.basePath) {
           host = item.basePath.replace('/home/www/', '');
         } else {
@@ -105,7 +122,7 @@ const Treads = defineComponent({
       }
       return host;
     },
-    runningHumanFormat(item) {
+    runningHumanFormat(item: iJob) {
       if (item.runningTime >= 0) {
         const msPerMinute = 60;
         const msPerHour = msPerMinute * 60;
@@ -137,22 +154,27 @@ const Treads = defineComponent({
   },
   computed: {
     ...mapState({
-        runningJobsList: state => state.runningJobsList,
-        threadsCounter: state => state.threadsCounter,
-        colors: state => state.colors
+      // @ts-ignore
+      runningJobsList: (state) => state.runningJobsList,
+      // @ts-ignore
+      threadsCounter: state => state.threadsCounter,
+      // @ts-ignore
+      colors: state => state.colors
     }),
     list() {
       let threads = [];
-      for (let x = 0; x < this.threadsCounter; x++) {
+      for (let x = 0; x < parseInt(this.threadsCounter.toString()); x++) {
         threads.push({'thread': x, 'command': ''});
       }
 
       for (let key in this.runningJobsList) {
+        //@ts-ignore
         const thread = this.runningJobsList[key].thread;
 
         //@ts-ignore
         for (const index in threads) {
           if (threads[index].thread === thread) {
+            // @ts-ignore
             threads[index] = this.runningJobsList[key];
           }
         }

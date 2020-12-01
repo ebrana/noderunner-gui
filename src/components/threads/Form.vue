@@ -1,12 +1,12 @@
 <template>
-  <form>
+  <form id="threadForm">
     <fieldset>
       <legend><h6>Include</h6></legend>
       <span v-for="(n, index) in include" v-bind:key="n">
         <div class="form-group">
           <div class="row align-items-center">
             <div class="col-sm-10">
-              <Input :index="n"/>
+              <Input :index="n" name="include" />
             </div>
             <div class="col-2">
               <Button v-if="n > 1" @button-click="includeRemove(this, index)" icon="fa-minus" styleClass="btn-danger"/>
@@ -23,7 +23,7 @@
         <div class="form-group">
           <div class="row align-items-center">
             <div class="col-sm-10">
-              <Input :index="n"/>
+              <Input :index="n" name="exclude" />
             </div>
             <div class="col-2">
               <Button v-if="n > 1" @button-click="excludeRemove(this, index)" icon="fa-minus" styleClass="btn-danger"/>
@@ -37,7 +37,7 @@
     <fieldset>
       <legend><h6>Implementation</h6></legend>
       <div class="form-group" id="implementation" ref="implementation">
-        <Input/>
+        <Input name="implementation" />
       </div>
     </fieldset>
   </form>

@@ -97,11 +97,33 @@ export default {
       this.closed = false;
       this.persistent = persistent;
     },
-    // @ts-ignore
     submit() {
-      console.log(this.$el)
-      let record = new FormData(this.$refs.form);
-      this.$emit('submit', record, this.persistent);
+      let myForm = this.$parent.$refs.form.$el
+      let record = {}
+      if (myForm !== undefined) {
+        record = {
+          'include': [],
+          'exclude': [],
+          'implementation': null
+        }
+        const formEntries = new FormData(myForm).entries()
+        const source = Array.from(formEntries);
+        for (let item in source) {
+          switch (source[item][0]) {
+            case 'include':
+              record.include.push(source[item][1]);
+              break;
+            case 'exclude':
+              record.exclude.push(source[item][1]);
+              break;
+            case 'implementation':
+              record.implementation = source[item][1];
+              break;
+          }
+        }
+      }
+
+      this.$emit('submit', record, this.persistent)
       this.close();
     }
   }
