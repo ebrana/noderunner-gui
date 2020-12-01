@@ -1,14 +1,16 @@
 <template>
-    <th scope="row" v-bind:style="colorsStyle(item.thread)" class="text-center align-middle">#{{ item.thread + 1 }}</th>
-    <td class="align-middle">{{ hostFormat(item) }}</td>
-    <td class="job align-middle" v-bind:title="item.job">{{ item.job }}</td>
-    <td colspan="align-middle"><Button @button-click="info(item)" icon="fa-refresh" :text="item.status" styleClass="btn-warning" v-if="item.job" /></td>
-    <td class="running align-middle"><span id="{{ item.thread }}">{{ runningHumanFormat(runningTime) }}</span></td>
-    <td class="align-middle">
-      <a class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a>
-      &nbsp;
-      <Button @button-click="click(item.thread)" icon="fa-trash" styleClass="btn-danger"/>
-    </td>
+  <th scope="row" v-bind:style="colorsStyle(item.thread)" class="text-center align-middle">#{{ item.thread + 1 }}</th>
+  <td class="align-middle">{{ hostFormat(item) }}</td>
+  <td class="job align-middle" v-bind:title="item.job">{{ item.job }}</td>
+  <td colspan="align-middle">
+    <Button @button-click="info(item)" icon="fa-refresh" :text="item.status" styleClass="btn-warning" v-if="item.job"/>
+  </td>
+  <td class="running align-middle"><span id="{{ item.thread }}">{{ runningHumanFormat(runningTime) }}</span></td>
+  <td class="align-middle">
+    <Button @button-click="editclick(item.thread)" icon="fa-pencil" styleClass="btn-info"/>
+    &nbsp;
+    <Button @button-click="delclick(item.thread)" icon="fa-trash" styleClass="btn-danger"/>
+  </td>
 </template>
 
 <script lang="ts">
@@ -50,12 +52,15 @@ const Process = defineComponent({
   beforeUnmount() {
     clearInterval(this.timer)
   },
-  emits: ['dbclick', 'info'],
+  emits: ['ebclick', 'dbclick', 'info'],
   methods: {
-    //@ts-ignore
-    click: function (id) {
+    delclick: function (id: String) {
       //@ts-ignore
       this.$emit('dbclick', id);
+    },
+    editclick: function (id: String) {
+      //@ts-ignore
+      this.$emit('ebclick', id);
     },
     //@ts-ignore
     info: function (item) {
@@ -77,30 +82,30 @@ const Process = defineComponent({
     // @ts-ignore
     colorsStyle(key) {
       //@ts-ignore
-      return 'background-color: ' + this.colors[key*2];
+      return 'background-color: ' + this.colors[key * 2];
     },
     // @ts-ignore
     runningHumanFormat(runningTime) {
       if (this.item && this.item.job) {
-          const msPerMinute = 60;
-          const msPerHour = msPerMinute * 60;
-          const msPerDay = msPerHour * 24;
-          const msPerMonth = msPerDay * 30;
-          const msPerYear = msPerDay * 365;
+        const msPerMinute = 60;
+        const msPerHour = msPerMinute * 60;
+        const msPerDay = msPerHour * 24;
+        const msPerMonth = msPerDay * 30;
+        const msPerYear = msPerDay * 365;
 
-          const elapsed = runningTime; // in second
+        const elapsed = runningTime; // in second
 
-          if (elapsed < msPerMinute) {
-            return Math.round(elapsed) + 's';
-          } else if (elapsed < msPerHour) {
-            return Math.floor(elapsed / msPerMinute) + 'min';
-          } else if (elapsed < msPerDay) {
-            return Math.floor(elapsed / msPerHour) + 'hrs';
-          } else if (elapsed < msPerYear) {
-            return Math.floor(elapsed / msPerMonth) + 'mths';
-          } else {
-            return Math.floor(elapsed / msPerYear) + 'yrs';
-          }
+        if (elapsed < msPerMinute) {
+          return Math.round(elapsed) + 's';
+        } else if (elapsed < msPerHour) {
+          return Math.floor(elapsed / msPerMinute) + 'min';
+        } else if (elapsed < msPerDay) {
+          return Math.floor(elapsed / msPerHour) + 'hrs';
+        } else if (elapsed < msPerYear) {
+          return Math.floor(elapsed / msPerMonth) + 'mths';
+        } else {
+          return Math.floor(elapsed / msPerYear) + 'yrs';
+        }
       } else {
         return '-';
       }
@@ -120,6 +125,7 @@ export default Process
   width: 30%;
   max-width: 300px;
 }
+
 .running {
   width: 10%;
   max-width: 180px;

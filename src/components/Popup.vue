@@ -1,12 +1,12 @@
 <template>
   <teleport to="#popup">
     <div @keyup.esc="close()" v-bind:id="id" v-if="closed === false" v-bind:class="popupStyle" tabindex="-1" role="dialog" v-bind:style="style">
-      <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{ title }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true" @click="close">×</span>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close">
+              <span aria-hidden="true">×</span>
             </button>
           </div>
           <div class="modal-body text-left">
@@ -15,7 +15,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="close">{{ closeButtonText }}</button>
             <button type="button" class="btn" v-bind:class="submitButtonClass" @click="submit" v-if="showSubmitButton"><span v-if="confirm">Yes</span><span
-                v-else>Save</span></button>
+                v-else>{{ submitButtonText }}</span></button>
           </div>
         </div>
       </div>
@@ -48,6 +48,9 @@ export default {
     },
     'submitButtonClass': {
       default: 'btn-primary'
+    },
+    'submitButtonText': {
+      default: 'Save'
     }
   },
   data() {
@@ -94,8 +97,10 @@ export default {
       this.closed = false;
       this.persistent = persistent;
     },
+    // @ts-ignore
     submit() {
-      let record = {};
+      console.log(this.$el)
+      let record = new FormData(this.$refs.form);
       this.$emit('submit', record, this.persistent);
       this.close();
     }

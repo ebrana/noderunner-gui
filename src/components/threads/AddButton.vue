@@ -1,8 +1,8 @@
 <template>
   <Button @button-click="click" />
-  <Popup ref="popup" id="threadPopup" @submit="submit" confirm="true" title="Confirm dialog">
+  <Popup ref="popup" id="threadPopup" @submit="submit" submitButtonText="Save" title="Thread setting">
     <template v-slot:content>
-      <span class="text-justify font-weight-normal">Are you sure you want to add a thread?</span>
+      <Form />
     </template>
   </Popup>
 </template>
@@ -14,12 +14,15 @@ import {defineComponent} from "vue";
 import Button from "./../Button";
 //@ts-ignore
 import Popup from "./../Popup";
+//@ts-ignore
+import Form from "./Form";
 
 const AddButton = defineComponent({
   name: "AddButton",
   components: {
     Button,
-    Popup
+    Popup,
+    Form
   },
   props: {
     'socket': {

@@ -13,10 +13,15 @@
       <th class="align-middle">actions</th>
     </tr>
     <tr v-for="(item) in list" v-bind:key="item">
-      <Process :colors="colors" :item="item" @dbclick="click" @info="info" />
+      <Process :colors="colors" :item="item" @dbclick="click" @info="info" @ebclick="edit" />
     </tr>
     </tbody>
   </table>
+  <Popup ref="editpopup" id="threadPopup" @submit="submit" submitButtonText="Save" title="Thread setting">
+    <template v-slot:content="{ persistent }">
+      <Form :persistent="persistent.id" ref="form" />
+    </template>
+  </Popup>
   <Popup ref="popup" id="threadPopupDelete" @submit="removeThreade" confirm="true" title="Confirm dialog" submitButtonClass="btn-danger">
     <template v-slot:content="{ persistent }">
       <span>Are you sure you want to delete a thread #{{ persistent.id+1 }} ?</span>
@@ -25,7 +30,7 @@
   <Info :item="infoItem" v-if="infoItem" @close="infoClose" />
 </template>
 
-<script>
+<script lang="ts">
 
 import Popup from "./../Popup";
 import AddButton from './AddButton.vue';
@@ -33,6 +38,8 @@ import Info from './Info.vue';
 import Process from './Process.vue';
 import {defineComponent} from "vue";
 import {mapState} from "vuex";
+//@ts-ignore
+import Form from "./Form";
 
 const Treads = defineComponent({
   name: "Treads",
@@ -50,12 +57,23 @@ const Treads = defineComponent({
     AddButton,
     Popup,
     Process,
-    Info
+    Info,
+    Form
   },
   methods: {
-    click: function (id) {
+    click: function (id: String) {
       //@ts-ignore
       this.$refs.popup.open({'id':id});
+    },
+    edit: function (id: String) {
+      //@ts-ignore
+      this.$refs.editpopup.open({'id':id});
+    },
+    submit: function (record, persistent) {
+      console.log(record, persistent);
+      //@ts-ignore
+      // this.socket.emit('addThread');
+
     },
     info: function (item) {
       this.infoItem = item;
