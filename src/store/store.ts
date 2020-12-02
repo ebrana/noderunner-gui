@@ -2,6 +2,12 @@ import {createStore} from "vuex";
 // @ts-ignore
 import config from "../../config/config";
 
+interface iStats {
+    'date': Date,
+    'intervalTo': number,
+    'byThread': Array<iStats>
+}
+
 export default createStore({
     devtools: true,
     state: {
@@ -114,10 +120,10 @@ export default createStore({
                     }
                     break;
                 case 'threadsStats':
-                    state.threadsStats = data.value.map((d) => {
+                    state.threadsStats = data.value.map((d: iStats) => {
                         d.date = new Date(d.intervalTo*1000)
                         for (const i in d.byThread) {
-                            d['thread'+(i)] = d.byThread[i];
+                            Object.assign(d, {['thread'+(i)]: d.byThread[i]})
                         }
                         return d;
                     });
