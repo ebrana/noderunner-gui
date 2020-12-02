@@ -11,6 +11,7 @@ const config = {
         {event: 'historyCountIncreased'},
         {event: 'historyCountDecreased'},
         {event: 'threadsCount'},
+        {event: 'threadsSettings'},
         {event: 'plannedCount'},
         {event: 'waitingCount'},
         {event: 'waitingCountIncreased'},
@@ -24,6 +25,8 @@ const config = {
         {event: 'runningJobsList'},
         {event: 'historyQueueData'},
         {event: 'threadsStats'},
+        {event: 'settingSaved'},
+        {event: 'settingSavedFalse'},
     ]
 };
 

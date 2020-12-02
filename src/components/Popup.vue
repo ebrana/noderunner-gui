@@ -98,9 +98,9 @@ export default {
       this.persistent = persistent;
     },
     submit() {
-      let myForm = this.$parent.$refs.form.$el
+      let myForm = this?.$parent?.$refs?.form?.$el
       let record = {}
-      if (myForm !== undefined) {
+      if (myForm && myForm !== undefined) {
         record = {
           'include': [],
           'exclude': [],
@@ -111,13 +111,17 @@ export default {
         for (let item in source) {
           switch (source[item][0]) {
             case 'include':
-              record.include.push(source[item][1]);
+              if (source[item][1] !== "") {
+                record.include.push(source[item][1]);
+              }
               break;
             case 'exclude':
-              record.exclude.push(source[item][1]);
+              if (source[item][1] !== "") {
+                record.exclude.push(source[item][1]);
+              }
               break;
             case 'implementation':
-              record.implementation = source[item][1];
+              record.implementation = source[item][1] !== "" ? source[item][1] : null;
               break;
           }
         }

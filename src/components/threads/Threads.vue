@@ -19,7 +19,7 @@
   </table>
   <Popup ref="editpopup" id="threadPopup" @submit="submit" submitButtonText="Save" title="Thread setting">
     <template v-slot:content="{ persistent }">
-      <Form :persistent="persistent.id" ref="form" />
+      <Form :persistent="persistent.id" ref="form" :default="getSettings(persistent.id)" />
     </template>
   </Popup>
   <Popup ref="popup" id="threadPopupDelete" @submit="removeThreade" confirm="true" title="Confirm dialog" submitButtonClass="btn-danger">
@@ -79,6 +79,9 @@ const Treads = defineComponent({
     Form
   },
   methods: {
+    getSettings: function (id: String) {
+      return this.threads[id]
+    },
     click: function (id: String) {
       //@ts-ignore
       this.$refs.popup.open({'id':id});
@@ -88,6 +91,8 @@ const Treads = defineComponent({
       this.$refs.editpopup.open({'id':id});
     },
     submit: function (record: iSettingForm, persistent: Object) {
+      //@ts-ignore
+      this.$store.dispatch('showPreloader', true);
       // @ts-ignore
       this.socket.emit('updateThreadSetting', { 'id': persistent.id, setting: record})
     },
@@ -155,11 +160,13 @@ const Treads = defineComponent({
   computed: {
     ...mapState({
       // @ts-ignore
-      runningJobsList: (state) => state.runningJobsList,
+      runningJobsList: state => state.runningJobsList,
       // @ts-ignore
       threadsCounter: state => state.threadsCounter,
       // @ts-ignore
-      colors: state => state.colors
+      colors: state => state.colors,
+      // @ts-ignore
+      threads: state => state.threads
     }),
     list() {
       let threads = [];
