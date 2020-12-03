@@ -106,25 +106,15 @@ export default {
           'exclude': [],
           'implementation': null
         }
-        const formEntries = new FormData(myForm).entries()
-        const source = Array.from(formEntries);
-        for (let item in source) {
-          switch (source[item][0]) {
-            case 'include':
-              if (source[item][1] !== "") {
-                record.include.push(source[item][1]);
-              }
-              break;
-            case 'exclude':
-              if (source[item][1] !== "") {
-                record.exclude.push(source[item][1]);
-              }
-              break;
-            case 'implementation':
-              record.implementation = source[item][1] !== "" ? source[item][1] : null;
-              break;
+        Array.from(new FormData(myForm).entries()).map((value) => {
+          if (value[1] !== "") {
+            if (Array.isArray(record[value[0]])) {
+              record[value[0]].push(value[1])
+            } else {
+              record[value[0]] = value[1]
+            }
           }
-        }
+        })
       }
 
       this.$emit('submit', record, this.persistent)
