@@ -68,8 +68,20 @@ export default createStore({
                     state.historyCounterInit = true
                     break;
                 case 'threadsCount':
-                    // state.threadsCounter = data.value;
-                    // state.showPreloader = false;
+                    state.threadsCounter = data.value;
+
+                    // just for BC
+                    state.threads = [];
+                    for (let i = 0; i < data.value; i++) {
+                        let configuration = {
+                            include: [],
+                            exclude: [],
+                            implementation: '',
+                        }
+                        // @ts-ignore
+                        state.threads.push(configuration)
+                    }
+                    state.showPreloader = false;
                     break;
                 case 'threadsSettings':
                 case 'settingSaved':
