@@ -1,6 +1,7 @@
 import {createStore} from "vuex";
 // @ts-ignore
 import config from "../../config/config";
+import moment from "moment";
 
 interface iStats {
     'date': Date,
@@ -24,7 +25,8 @@ export default createStore({
         newThreadsStat: [],
         invalidateChart: false,
         colors: [],
-        showPreloader: true
+        showPreloader: true,
+        listItems: []
     },
     mutations: {
         showPreloader(state, value) {
@@ -38,6 +40,9 @@ export default createStore({
         },
         colors(state, value) {
             state.colors = value
+        },
+        resetListItems(state) {
+            state.listItems = [];
         },
         emitData(state, data) {
             let findIndex = false
@@ -146,6 +151,25 @@ export default createStore({
                     break;
                 case 'settingSavedFalse':
                     state.showPreloader = false;
+                    break;
+                case 'historyQueueData':
+                case 'immediateQueueData':
+                case 'plannedQueueData':
+                    data.value.map((item: any) => {
+                        if (typeof item.output !== 'undefined') {
+                            item.longOutput = item.output;
+                            item.output = item.output.substring(0, 120);
+                        }
+                        if (typeof item.finished !== 'undefined') {
+                            if (typeof item.started !== 'undefined') {
+                                item.duration = Math.round((item.finished - item.started)*10)/10 + ' s'
+                            }
+
+                            item.finished = moment(item.finished * 1000).format('D.M. H:mm:ss').replace(' ',"\u00A0")
+                        }
+                    })
+
+                    state.listItems = data.value;
                     break;
             }
         }

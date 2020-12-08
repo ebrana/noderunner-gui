@@ -14,40 +14,50 @@
         </div>
       </nav>
     </div>
+
     <div class="wall" v-if="threadsStats.length > 0 && threadsCounter > 0">
       <Chart/>
     </div>
+
     <div v-else class="d-flex justify-content-center mb-2">
       <div class="spinner-grow" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
+
     <div>
       <div class="">
+
         <div class="container">
           <div class="row">
             <div class="col-md">
-              <Counter title="Scheduled" icon="fa fa-recycle" :value="plannedCounter"/>
+              <Counter title="Scheduled" icon="fa fa-recycle" v-on:click="loadQueue('planned')" :value="plannedCounter"/>
             </div>
             <div class="col-1">
               <img class="arrow" src="images/grey-right-arrow-hi.png" alt=""/>
             </div>
             <div class="col-md">
-              <Counter title="Waiting" icon="fa fa-hourglass-start" :value="waitingCounter"/>
+              <Counter title="Waiting" icon="fa fa-hourglass-start" v-on:click="loadQueue('immediate')" :value="waitingCounter"/>
             </div>
             <div class="col-1">
               <img class="arrow" src="images/grey-right-arrow-hi.png" alt=""/>
             </div>
             <div class="col-md">
-              <Counter title="Completed" icon="fa fa-check" :value="historyCounter"/>
+              <Counter title="Completed" icon="fa fa-check" v-on:click="loadQueue('history')" :value="historyCounter"/>
             </div>
           </div>
         </div>
+
         <br>
         <Threads :socket="socket"/>
       </div>
       <hr/>
     </div>
+
+    <div>
+      <commands-list :type="listType" :socket="socket"></commands-list>
+    </div>
+
   </div>
 </template>
 
@@ -58,6 +68,8 @@ import MenuButton from './components/MenuButton.vue';
 import Counter from './components/Counter.vue';
 import Threads from './components/threads/Threads.vue';
 import io from "socket.io-client";
+import CommandsList from './components/commands/list/List.vue';
+
 // @ts-ignore
 import config from './../config/config.js';
 import {defineComponent} from "vue";
@@ -70,13 +82,15 @@ const Main = defineComponent({
     MenuButton,
     Counter,
     Threads,
-    Preloader
+    Preloader,
+    CommandsList
   },
   data: () => {
     return {
       collapsed: false,
       collapsingClass: 'collapse',
-      collapsingStyle: ''
+      collapsingStyle: '',
+      listType: String(''),
     }
   },
   setup() {
@@ -101,7 +115,7 @@ const Main = defineComponent({
       //@ts-ignore
       plannedCounter: state => state.plannedCounter,
       //@ts-ignore
-      waitingCounter: state => state.waitingCounter
+      waitingCounter: state => state.waitingCounter,
     })
   },
   mounted() {
@@ -148,6 +162,9 @@ const Main = defineComponent({
           }, 150)
         }, 30)
       }
+    },
+    loadQueue: function (queueType: string) {
+      this.listType = queueType
     }
   }
 });

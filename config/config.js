@@ -24,6 +24,8 @@ const config = {
         {event: 'plannedQueueData'},
         {event: 'runningJobsList'},
         {event: 'historyQueueData'},
+        {event: 'immediateQueueData'},
+        {event: 'plannedQueueData'},
         {event: 'threadsStats'},
         {event: 'settingSaved'},
         {event: 'settingSavedFalse'},
