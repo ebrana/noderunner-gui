@@ -9,6 +9,12 @@ interface iStats {
     'byThread': Array<iStats>
 }
 
+interface IForm {
+    include: Array<Number>,
+    exclude: Array<Number>,
+    implementation: string
+}
+
 export default createStore({
     devtools: true,
     state: {
@@ -19,7 +25,7 @@ export default createStore({
         waitingCounter: 0,
         plannedCounter: 0,
         threadsCounter: 0,
-        threads: [],
+        threads: Array<IForm>(),
         threadsStats: [],
         runningJobsList: [],
         newThreadsStat: [],
@@ -71,16 +77,13 @@ export default createStore({
                     state.threadsCounter = data.value;
 
                     // just for BC
-                    state.threads = [];
-                    for (let i = 0; i < data.value; i++) {
-                        let configuration = {
+                    Array(data.value).fill(null).map(() => {
+                        state.threads.push({
                             include: [],
                             exclude: [],
                             implementation: '',
-                        }
-                        // @ts-ignore
-                        state.threads.push(configuration)
-                    }
+                        })
+                    });
                     state.showPreloader = false;
                     break;
                 case 'threadsSettings':

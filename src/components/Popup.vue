@@ -106,12 +106,12 @@ export default {
           'exclude': [],
           'implementation': null
         }
-        Array.from(new FormData(myForm).entries()).map((value) => {
-          if (value[1] !== "") {
-            if (Array.isArray(record[value[0]])) {
-              record[value[0]].push(value[1])
+        Array.from(new FormData(myForm).entries()).map(([key, value]) => {
+          if (value !== "") {
+            if (Array.isArray(record[key])) {
+              record[key].push(value)
             } else {
-              record[value[0]] = value[1]
+              record[key] = value
             }
           }
         })
