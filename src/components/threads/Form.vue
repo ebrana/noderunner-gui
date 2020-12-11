@@ -122,7 +122,7 @@ export default {
           }
         })
       }
-      implementation.value = props.default.implementation
+      implementation.value = props.default?.implementation
     }, {immediate: true})
 
     return {
