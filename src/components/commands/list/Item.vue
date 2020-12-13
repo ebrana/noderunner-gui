@@ -1,17 +1,22 @@
 <template>
   <tr>
-    <td v-for="(column, index) in columns" :key='index'>
+    <td v-for="(column, index) in columns" :key='index' class="align-middle">
       <div v-if="column === 'status'" class="alert text-center" v-bind:class="[command[column] !== 'success' ? 'alert-danger' : 'alert-success']">{{command[column]}}</div>
+      <Button v-else-if="column === 'info'" icon="fa-question" styleClass="btn-info" @button-click="showInfo(command)"></Button>
       <div v-else>{{ command[column] }}</div>
     </td>
   </tr>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+//@ts-ignore
+import Button from "./../../Button";
 
-const CommandsListItem = defineComponent({
+export default {
   name: "CommandsListItem",
+  components: {
+    Button
+  },
   props: {
     command: {
       type: Object,
@@ -21,10 +26,21 @@ const CommandsListItem = defineComponent({
       type: Array,
       required: true
     }
-  }
-});
+  },
+  emits: ['show-command-info'],
 
-export default CommandsListItem
+  setup(props: Object, context: Object) {
+    function showInfo(command: Object){
+      //@ts-ignore
+      context.emit('show-command-info', command);
+    }
+
+    return {
+      showInfo
+    }
+  }
+}
+
 </script>
 
 <style scoped>
