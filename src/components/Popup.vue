@@ -1,7 +1,7 @@
 <template>
   <teleport to="#popup">
     <div @keyup.esc="close()" v-bind:id="id" v-if="closed === false" v-bind:class="popupStyle" tabindex="-1" role="dialog" v-bind:style="style">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" v-bind:class="modalStyle" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{ title }}</h5>
@@ -51,6 +51,9 @@ export default {
     },
     'submitButtonText': {
       default: 'Save'
+    },
+    'modalStyle': {
+      default: ''
     }
   },
   data() {

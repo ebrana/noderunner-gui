@@ -1,13 +1,14 @@
 <template>
   <div id="commands-list-container" class="mt-4">
-    <h3 v-if="type" class="m-2"><strong>{{type}}</strong> jobs list</h3>
+    <h3 v-if="type" class="m-2"><strong>{{ type }}</strong> jobs list</h3>
     <table class="table">
       <thead class="thead-light">
-        <tr>
-          <th v-for="(column, index) in columns"
+      <tr>
+        <th v-for="(column, index) in columns"
             :key='index'
-          >{{column}}</th>
-        </tr>
+        >{{ column }}
+        </th>
+      </tr>
       </thead>
       <tbody>
       <commands-list-item
@@ -16,27 +17,19 @@
           :command="command"
           :columns="columns"
           @show-command-info="showCommandInfo"
+          @rerun-command="rerunCommand"
       ></commands-list-item>
       </tbody>
     </table>
   </div>
-  <popup ref="infoPopup" id="commandInfoPopup" showSubmitButton="false" title="Command info">
+  <popup ref="infoPopup" id="commandInfoPopup" :showSubmitButton="false" modal-style="modal-lg" title="Command info">
     <template v-slot:content="{ persistent }">
-      <!-- TODO: make component  -->
-      <h4>{{persistent.command.job}}</h4>
-      <table>
-        <tbody>
-          <tr>
-            <td>{{persistent.command.host}}</td>
-          </tr>
-          <tr>
-            <td>{{persistent.command.status}}</td>
-          </tr>
-          <tr>
-            <td>{{persistent.command.output}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <commands-detail :command="persistent.command"></commands-detail>
+    </template>
+  </popup>
+  <popup ref="rerunPopup" id="rerunCommandPopup" :showSubmitButton="false" :confirm="true" title="Do you want to rerun this command?">
+    <template v-slot:content="{ persistent }">
+      <div>{{ persistent.command.job }}</div>
     </template>
   </popup>
 </template>
@@ -46,12 +39,14 @@ import {defineComponent} from "vue"
 //@ts-ignore
 import CommandsListItem from "./Item"
 //@ts-ignore
+import CommandsDetail from "./../detail/Detail"
+//@ts-ignore
 import Popup from "./../../Popup";
 import {mapState} from "vuex";
 
 const CommandsList = defineComponent({
   name: "CommandsList",
-  components: {CommandsListItem, Popup},
+  components: {CommandsListItem, Popup, CommandsDetail},
   props: {
     type: {
       type: String,
@@ -71,19 +66,19 @@ const CommandsList = defineComponent({
     return {
       columns: [],
       columnsTypes: {
-         history: ['info', 'reruninfo', 'finished', 'duration', 'host', 'job', 'output', 'status'],
-         immediate: ['info', 'infoonly', 'added', 'host', 'job', 'status'],
-         planned: ['info', 'infoonly', 'schedule', 'host', 'job'],
+        history: ['info', 'rerun', 'finished', 'duration', 'host', 'job', 'output', 'status'],
+        immediate: ['info', 'infoonly', 'added', 'host', 'job', 'status'],
+        planned: ['info', 'infoonly', 'schedule', 'host', 'job'],
       }
     }
   },
   watch: {
     type: {
-      handler (queueType) {
+      handler(queueType) {
         //@ts-ignore
         this.$store.commit('resetListItems')
 
-        switch (queueType){
+        switch (queueType) {
           case 'history':
             //@ts-ignore
             this.columns = this.columnsTypes.history
@@ -107,6 +102,10 @@ const CommandsList = defineComponent({
     showCommandInfo: function (command: Object) {
       //@ts-ignore
       this.$refs.infoPopup.open({'command': command});
+    },
+    rerunCommand: function (command: Object) {
+      //@ts-ignore
+      this.$refs.rerunPopup.open({'command': command});
     }
   }
 });
