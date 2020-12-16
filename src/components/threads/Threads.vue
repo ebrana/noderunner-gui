@@ -27,7 +27,7 @@
       <span>Are you sure you want to delete a thread #{{ persistent.id+1 }} ?</span>
     </template>
   </Popup>
-  <Info :item="infoItem" v-if="infoItem._id" @close="infoClose" />
+  <Info :item="infoItem" v-if="infoItem._id" @close="infoClose" show-on-mounted="true" />
 </template>
 
 <script lang="ts">
@@ -112,8 +112,6 @@ const Treads = defineComponent({
       this.$store.dispatch('showPreloader', true);
       //@ts-ignore
       this.socket.emit('delThread', [persistent.id]);
-      //@ts-ignore
-      this.$store.dispatch('invalidateChart', true);
     },
     //@ts-ignore
     hostFormat(item: iJob) {

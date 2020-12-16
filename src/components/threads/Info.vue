@@ -1,55 +1,15 @@
 <template>
-  <Popup ref="popup" id="threadInfoPopup" :showSubmitButton="false" closeButtonText="Ok" title="Job details" @close="close">
+  <Popup ref="popup" id="threadInfoPopup" modal-style="modal-lg" :showSubmitButton="false" closeButtonText="Ok" title="Job details" @close="close">
     <template v-slot:content>
       <table class="table table-sm table-striped table-borderless">
         <tbody>
-        <tr>
-          <th>_id</th>
-          <td>{{ item._id }}</td>
-        </tr>
-        <tr>
-          <th>command</th>
-          <td>{{ item.command }}</td>
-        </tr>
-        <tr>
-          <th>concurrencyMode</th>
-          <td>{{ item.concurrencyMode }}</td>
-        </tr>
-        <tr>
-          <th>host</th>
-          <td>{{ item.host }}</td>
-        </tr>
-        <tr>
-          <th>env</th>
-          <td>{{ item.env }}</td>
-        </tr>
-        <tr>
-          <th>added</th>
-          <td>{{ humanDate(item.added) }}</td>
-        </tr>
-        <tr>
-          <th>schedule</th>
-          <td>{{ item.schedule }}</td>
-        </tr>
-        <tr>
-          <th>__class</th>
-          <td>{{ item.__class }}</td>
-        </tr>
-        <tr>
-          <th>sourceId</th>
-          <td>{{ item.sourceId }}</td>
-        </tr>
-        <tr>
-          <th>started</th>
-          <td>{{ humanDate(item.started) }}</td>
-        </tr>
-        <tr>
-          <th>thread</th>
-          <td>{{ item.thread+1 }}</td>
-        </tr>
-        <tr>
-          <th>waiting</th>
-          <td>{{ item.waiting }}</td>
+        <tr v-for="(value, name, index) in item"
+            :key='index'
+        >
+          <template v-if="name !== 'index' && name !== 'setting' && name !== 'runningTime'">
+            <th>{{ name }}</th>
+            <td><span v-if="name === 'started' || name === 'added'">{{ humanDate(value) }}</span><span v-else>{{ value }}</span></td>
+          </template>
         </tr>
         </tbody>
       </table>
@@ -72,13 +32,35 @@ const Info = defineComponent({
     'item': {
       type: Object
     },
+    'showOnMounted': {
+      type: Boolean,
+      default: false
+    },
+    'isVisible': {
+      type: Boolean,
+      default: false
+    }
   },
   mounted() {
-    //@ts-ignore
-    this.$refs.popup.open();
+    if (this.showOnMounted) {
+      //@ts-ignore
+      this.$refs.popup.open();
+    }
   },
   emits: ['close'],
+  watch: {
+    'isVisible': function(isVisible) {
+      if (isVisible) {
+        //@ts-ignore
+        this.$refs.popup.open();
+      }
+    }
+  },
   methods: {
+    show: function () {
+      //@ts-ignore
+      this.$refs.popup.open();
+    },
     close: function () {
       //@ts-ignore
       this.$emit('close');
