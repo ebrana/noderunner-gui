@@ -48,7 +48,7 @@ export default createStore({
             state.colors = value
         },
         resetListItems(state) {
-            state.listItems = [];
+            state.listItems = []
         },
         emitData(state, data) {
             let findIndex = false
@@ -74,7 +74,7 @@ export default createStore({
                     state.historyCounterInit = true
                     break;
                 case 'threadsCount':
-                    state.threadsCounter = data.value;
+                    state.threadsCounter = data.value
 
                     // just for BC
                     Array(data.value).fill(null).map(() => {
@@ -84,13 +84,20 @@ export default createStore({
                             implementation: '',
                         })
                     });
-                    state.showPreloader = false;
+                    state.showPreloader = false
                     break;
                 case 'threadsSettings':
-                case 'settingSaved':
                     state.threadsCounter = data.value.length
                     state.threads = data.value
-                    state.showPreloader = false;
+                    state.showPreloader = false
+                    break;
+                case 'settingSaved':
+                    state.threadsCounter = data.value.threads.length
+                    state.threads = data.value.threads
+                    state.showPreloader = false
+                    if (data.value.invalidateChart) {
+                        state.invalidateChart = true
+                    }
                     break;
                 case 'plannedCount':
                     state.plannedCounter = data.value
@@ -165,7 +172,7 @@ export default createStore({
                     state.newThreadsStat = dataProvider
                     break;
                 case 'settingSavedFalse':
-                    state.showPreloader = false;
+                    state.showPreloader = false
                     break;
                 case 'historyQueueData':
                 case 'immediateQueueData':
@@ -184,7 +191,7 @@ export default createStore({
                         }
                     })
 
-                    state.listItems = data.value;
+                    state.listItems = data.value
                     break;
             }
         }

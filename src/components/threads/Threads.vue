@@ -84,15 +84,15 @@ const Treads = defineComponent({
     },
     click: function (id: String) {
       //@ts-ignore
-      this.$refs.popup.open({'id':id});
+      this.$refs.popup.open({'id':id})
     },
     edit: function (id: String) {
       //@ts-ignore
-      this.$refs.editpopup.open({'id':id});
+      this.$refs.editpopup.open({'id':id})
     },
     submit: function (record: iSettingForm, persistent: Object) {
       //@ts-ignore
-      this.$store.dispatch('showPreloader', true);
+      this.$store.dispatch('showPreloader', true)
       // @ts-ignore
       this.socket.emit('updateThreadSetting', { 'id': persistent.id, setting: record})
     },
@@ -109,18 +109,18 @@ const Treads = defineComponent({
     },
     removeThreade: function (record: iSettingForm, persistent: Object) {
       //@ts-ignore
-      this.$store.dispatch('showPreloader', true);
+      this.$store.dispatch('showPreloader', true)
       //@ts-ignore
-      this.socket.emit('delThread', [persistent.id]);
+      this.socket.emit('delThread', [persistent.id])
     },
     //@ts-ignore
     hostFormat(item: iJob) {
       let host = '';
       if (item._id != undefined) {
         if (item.basePath) {
-          host = item.basePath.replace('/home/www/', '');
+          host = item.basePath.replace('/home/www/', '')
         } else {
-          host = item.host ? item.host.replace('http://', '').replace('https://', '') : '-';
+          host = item.host ? item.host.replace('http://', '').replace('https://', '') : '-'
         }
       }
       return host;
@@ -167,25 +167,30 @@ const Treads = defineComponent({
       threads: state => state.threads
     }),
     list() {
-      let threads = [];
-      for (let x = 0; x < parseInt(this.threadsCounter.toString()); x++) {
-        threads.push({'thread': x, 'command': ''});
+      let threads = []
+      for (let x = 0; x < this.threads.length; x++) {
+        //@ts-ignore
+        threads.push({'thread': x, 'command': '', 'setting': this.threads[x], 'index': parseInt(x)})
       }
 
       for (let key in this.runningJobsList) {
         //@ts-ignore
-        const thread = this.runningJobsList[key].thread;
+        const thread = this.runningJobsList[key].thread
 
         //@ts-ignore
         for (const index in threads) {
-          if (threads[index].thread === thread) {
+          if ((threads[index].setting.uid !== undefined && threads[index].setting.uid === thread) || // novy server
+              (threads[index].thread === thread && threads[index].setting.uid === undefined)) { // back compatibility
             // @ts-ignore
-            threads[index] = this.runningJobsList[key];
+            threads[index] = this.runningJobsList[key]
+            // @ts-ignore
+            threads[index]['setting'] = this.threads[index]
+            threads[index]['index'] = parseInt(index)
           }
         }
       }
 
-      return threads.reverse();
+      return threads.reverse()
     }
   },
 });

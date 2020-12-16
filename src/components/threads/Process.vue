@@ -1,5 +1,5 @@
 <template>
-  <th scope="row" v-bind:style="colorsStyle(item.thread)" class="text-center align-middle">#{{ item.thread + 1 }}</th>
+  <th scope="row" v-bind:style="colorsStyle(item.index)" class="text-center align-middle">#{{ item.index + 1 }}</th>
   <td class="align-middle">{{ hostFormat(item) }}</td>
   <td class="job align-middle" v-bind:title="item.job">{{ item.job }}</td>
   <td colspan="align-middle">
@@ -7,9 +7,9 @@
   </td>
   <td class="running align-middle"><span id="{{ item.thread }}">{{ runningHumanFormat(runningTime) }}</span></td>
   <td class="align-middle">
-    <Button @button-click="editclick(item.thread)" icon="fa-pencil" styleClass="btn-info"/>
+    <Button @button-click="editclick(item.index)" icon="fa-pencil" styleClass="btn-info" v-if="item.setting.delete !== true" />
     &nbsp;
-    <Button @button-click="delclick(item.thread)" icon="fa-trash" styleClass="btn-danger"/>
+    <Button @button-click="delclick(item.index)" icon="fa-trash" styleClass="btn-danger" v-if="item.setting.delete !== true" />
   </td>
 </template>
 
