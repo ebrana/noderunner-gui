@@ -11,6 +11,14 @@
           <ul class="navbar-nav mr-auto">
             <MenuButton v-for="item in buttons" :key="item.name" :name="item.name" :url="item.url" :basePath="basePath"></MenuButton>
           </ul>
+          <span v-if="jwtEnable">
+            <span class="d-flex" v-if="isLoggedIn === false">
+              <a class="btn btn-outline-success" @click="signin">Sign in</a>
+            </span>
+            <span v-else>
+              <a class="btn btn-secondary" @click="signout">Logout</a>
+            </span>
+          </span>
         </div>
       </nav>
     </div>
@@ -59,6 +67,16 @@
     </div>
 
   </div>
+  <Popup ref="signin" id="signInPopup" @submit="login" title="Login..." submitButtonClass="btn-success" submitButtonText="Login" v-if="isLoggedIn === false">
+    <template v-slot:content="">
+      <Login ref="form" />
+    </template>
+  </Popup>
+  <Alert v-if="jwt.message" @alerthide="alertHide">
+    <template v-slot:content>
+      <span>{{ jwt.message }}</span>
+    </template>
+  </Alert>
 </template>
 
 <script lang="ts">
@@ -69,21 +87,30 @@ import Counter from './components/Counter.vue';
 import Threads from './components/threads/Threads.vue';
 import io from "socket.io-client";
 import CommandsList from './components/commands/list/List.vue';
-
-// @ts-ignore
-import config from './../config/config.js';
+import config from './../config/config';
 import {defineComponent} from "vue";
-import {mapState} from "vuex";
+import {mapState, mapGetters, mapActions} from "vuex";
+import Popup from "@/components/Popup.vue";
+import Login from "@/components/Login.vue";
+import Alert from "@/components/Alert.vue";
+
+interface iLoginForm {
+  'email': String,
+  'password': String
+}
 
 const Main = defineComponent({
   name: "Main",
   components: {
+    Alert,
+    Login,
     Chart,
     MenuButton,
     Counter,
     Threads,
     Preloader,
-    CommandsList
+    CommandsList,
+    Popup,
   },
   data: () => {
     return {
@@ -97,11 +124,13 @@ const Main = defineComponent({
     let buttons = config.servers;
     let basePath = '';
     let socket = null;
+    const jwtEnable = config.jwt.enable;
 
     return {
       buttons,
       basePath,
-      socket
+      socket,
+      jwtEnable
     }
   },
   computed: {
@@ -116,7 +145,12 @@ const Main = defineComponent({
       plannedCounter: state => state.plannedCounter,
       //@ts-ignore
       waitingCounter: state => state.waitingCounter,
-    })
+      //@ts-ignore
+      jwt: state => state.jwt,
+    }),
+    ...mapGetters([
+      'isLoggedIn'
+    ]),
   },
   mounted() {
     //@ts-ignore
@@ -138,6 +172,23 @@ const Main = defineComponent({
     }
   },
   methods: {
+    ...mapActions([
+      'logout'
+    ]),
+    alertHide: function () {
+      this.jwt.message = null
+    },
+    signin: function () {
+      //@ts-ignore
+      this.$refs.signin.open()
+    },
+    signout: function () {
+      this.logout()
+    },
+    login: function (record: iLoginForm) {
+      // @ts-ignore
+      this.socket.emit('login', record)
+    },
     collapsing: function () {
       if (this.collapsed === false) {
         this.collapsingClass = 'collapsing';

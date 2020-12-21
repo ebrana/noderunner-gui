@@ -15,6 +15,11 @@ interface IForm {
     implementation: string
 }
 
+interface iJwt {
+    message: String,
+    token: String
+}
+
 export default createStore({
     devtools: true,
     state: {
@@ -32,9 +37,13 @@ export default createStore({
         invalidateChart: false,
         colors: [],
         showPreloader: true,
-        listItems: []
+        listItems: [],
+        jwt: <iJwt>{},
     },
     mutations: {
+        jwt(state, value) {
+            state.jwt = value
+        },
         showPreloader(state, value) {
             state.showPreloader = value
         },
@@ -56,6 +65,10 @@ export default createStore({
 
             // console.log(config.events[data.key].event, data.value)
             switch (config.events[data.key].event) {
+                case 'loginSuccess':
+                case 'loginError':
+                    state.jwt = data.value
+                    break;
                 case 'historyCountDecreased':
                     if (state.historyCounterInit === true) {
                         state.historyCounter -= data.value
@@ -211,6 +224,9 @@ export default createStore({
         },
         showPreloader(context, value) {
             context.commit('showPreloader', value)
+        },
+        logout(context) {
+            context.commit('jwt', {})
         }
     },
     getters: {
@@ -246,6 +262,12 @@ export default createStore({
         },
         showPreloader: state => {
             return state.showPreloader
+        },
+        isLoggedIn: state => {
+            if ((state.jwt.message !== undefined && state.jwt.message) || state.jwt.token === undefined || state.jwt.token === '') {
+                return false
+            }
+            return true
         }
     }
 });

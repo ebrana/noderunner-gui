@@ -6,18 +6,19 @@
     <Button @button-click="info(item)" icon="fa-refresh" :text="item.status" styleClass="btn-warning" v-if="item.job"/>
   </td>
   <td class="running align-middle"><span id="{{ item.thread }}">{{ runningHumanFormat(runningTime) }}</span></td>
-  <td class="align-middle">
-    <Button @button-click="editclick(item.index)" icon="fa-pencil" styleClass="btn-info" v-if="item.setting.delete !== true" />
+  <td class="align-middle" v-if="jwt">
+    <Button @button-click="editclick(item.index)" icon="fa-pencil" styleClass="btn-info" v-if="item.setting.delete !== true && isLoggedIn === true" />
     &nbsp;
-    <Button @button-click="delclick(item.index)" icon="fa-trash" styleClass="btn-danger" v-if="item.setting.delete !== true" />
+    <Button @button-click="delclick(item.index)" icon="fa-trash" styleClass="btn-danger" v-if="item.setting.delete !== true && isLoggedIn === true" />
   </td>
 </template>
 
 <script lang="ts">
 
 import {defineComponent} from "vue";
-//@ts-ignore
-import Button from "./../Button";
+import Button from "./../Button.vue";
+import config from './../../../config/config';
+import {mapGetters} from "vuex";
 
 const Process = defineComponent({
   name: "Process",
@@ -53,6 +54,14 @@ const Process = defineComponent({
     clearInterval(this.timer)
   },
   emits: ['ebclick', 'dbclick', 'info'],
+  computed: {
+    ...mapGetters([
+      'isLoggedIn'
+    ]),
+    jwt() {
+      return config.jwt.enable
+    }
+  },
   methods: {
     delclick: function (id: String) {
       //@ts-ignore

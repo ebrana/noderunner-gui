@@ -54,6 +54,9 @@ export default {
     },
     'modalStyle': {
       default: ''
+    },
+    'schema': {
+      default: {}
     }
   },
   data() {
@@ -104,11 +107,7 @@ export default {
       let myForm = this?.$parent?.$refs?.form?.$el
       let record = {}
       if (myForm && myForm !== undefined) {
-        record = {
-          'include': [],
-          'exclude': [],
-          'implementation': null
-        }
+        record = JSON.parse(JSON.stringify(this.schema))
         Array.from(new FormData(myForm).entries()).map(([key, value]) => {
           if (value !== "") {
             if (Array.isArray(record[key])) {

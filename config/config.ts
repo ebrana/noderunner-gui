@@ -6,6 +6,9 @@ const config = {
         {"name": "ep1", "url": "ep1.ebrana.cz:8001"},
         {"name": "imes2", "url": "hosting-imes2.ebrana.cz:8001"},
     ],
+    "jwt": {
+        "enable": true
+    },
     "events": [
         {event: 'historyCount'},
         {event: 'historyCountIncreased'},
@@ -29,6 +32,8 @@ const config = {
         {event: 'threadsStats'},
         {event: 'settingSaved'},
         {event: 'settingSavedFalse'},
+        {event: 'loginSuccess'},
+        {event: 'loginError'},
     ]
 };
 

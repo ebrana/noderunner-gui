@@ -5,24 +5,24 @@
     </thead>
     <tbody>
     <tr>
-      <th class="index text-center align-middle">thrd <AddButton :socket="socket" /></th>
+      <th class="index text-center align-middle">thrd <AddButton :socket="socket" v-if="jwt && isLoggedIn === true" /></th>
       <th class="align-middle">host</th>
       <th class="job align-middle">job</th>
       <th class="align-middle">status</th>
       <th class="running align-middle">running</th>
-      <th class="align-middle">actions</th>
+      <th class="align-middle" v-if="jwt">actions</th>
     </tr>
     <tr v-for="(item) in list" v-bind:key="item">
       <Process :colors="colors" :item="item" @dbclick="click" @info="info" @ebclick="edit" />
     </tr>
     </tbody>
   </table>
-  <Popup ref="editpopup" id="threadPopup" @submit="submit" submitButtonText="Save" title="Thread setting">
+  <Popup ref="editpopup" id="threadPopup" @submit="submit" submitButtonText="Save" title="Thread setting" :schema="settingSchema">
     <template v-slot:content="{ persistent }">
       <Form :persistent="persistent.id" ref="form" :default="getSettings(persistent.id)" />
     </template>
   </Popup>
-  <Popup ref="popup" id="threadPopupDelete" @submit="removeThreade" confirm="true" title="Confirm dialog" submitButtonClass="btn-danger">
+  <Popup ref="popup" id="threadPopupDelete" @submit="removeThreade" confirm="true" title="Confirm dialog" submitButtonClass="btn-danger" :schema="settingSchema">
     <template v-slot:content="{ persistent }">
       <span>Are you sure you want to delete a thread #{{ persistent.id+1 }} ?</span>
     </template>
@@ -32,6 +32,7 @@
 
 <script lang="ts">
 
+import config from './../../../config/config';
 //@ts-ignore
 import Popup from "./../Popup";
 //@ts-ignore
@@ -41,14 +42,14 @@ import Info from './Info.vue';
 //@ts-ignore
 import Process from './Process.vue';
 import {defineComponent} from "vue";
-import {mapState} from "vuex";
+import {mapGetters, mapState} from "vuex";
 //@ts-ignore
 import Form from "./Form";
 
 interface iSettingForm {
   'include': Array<String>,
   'exclude': Array<String>,
-  'implementation': String
+  'implementation': String|null
 }
 
 interface iJob {
@@ -68,7 +69,12 @@ const Treads = defineComponent({
   data() {
     return {
       'infoItem': {
-      } as iJob
+      } as iJob,
+      'settingSchema': {
+        'include': [],
+        'exclude': [],
+        'implementation': null
+      }
     }
   },
   components: {
@@ -166,6 +172,9 @@ const Treads = defineComponent({
       // @ts-ignore
       threads: state => state.threads
     }),
+    ...mapGetters([
+      'isLoggedIn'
+    ]),
     list() {
       let threads = []
       for (let x = 0; x < this.threads.length; x++) {
@@ -191,6 +200,9 @@ const Treads = defineComponent({
       }
 
       return threads.reverse()
+    },
+    jwt() {
+      return config.jwt.enable
     }
   },
 });
