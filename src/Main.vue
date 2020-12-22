@@ -77,9 +77,15 @@
       <span>{{ jwt.message }}</span>
     </template>
   </Alert>
+  <Alert v-if="permissionDenied !== ''" @alerthide="alertHide">
+    <template v-slot:content>
+      <span>{{ permissionDenied }}</span>
+    </template>
+  </Alert>
 </template>
 
 <script lang="ts">
+
 import Preloader from './components/Preloader.vue';
 import Chart from './components/Chart.vue';
 import MenuButton from './components/MenuButton.vue';
@@ -118,6 +124,7 @@ const Main = defineComponent({
       collapsingClass: 'collapse',
       collapsingStyle: '',
       listType: String(''),
+      permissionDenied: String('')
     }
   },
   setup() {
@@ -169,6 +176,17 @@ const Main = defineComponent({
           store.dispatch('emitData', {key: event, value: data});
         })
       }
+      socket.on('permissionDenied', (message: any) => {
+        //@ts-ignore
+        this.$store.dispatch('showPreloader', false)
+        this.permissionDenied = message ? message : 'Permission denied!'
+        if (this.permissionDenied !== 'Permission denies!') {
+          this.logout()
+        }
+      })
+    }
+    if (localStorage.jwt) {
+      store.dispatch('jwt', {token: localStorage.jwt})
     }
   },
   methods: {
@@ -177,6 +195,7 @@ const Main = defineComponent({
     ]),
     alertHide: function () {
       this.jwt.message = null
+      this.permissionDenied = '';
     },
     signin: function () {
       //@ts-ignore

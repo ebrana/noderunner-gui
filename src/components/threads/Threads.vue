@@ -28,6 +28,11 @@
     </template>
   </Popup>
   <Info :item="infoItem" v-if="infoItem._id" @close="infoClose" show-on-mounted="true" />
+  <Alert v-if="successMessage !== ''" @alerthide="alertHide" type="alert-success">
+    <template v-slot:content>
+      <span>{{ successMessage }}</span>
+    </template>
+  </Alert>
 </template>
 
 <script lang="ts">
@@ -45,6 +50,7 @@ import {defineComponent} from "vue";
 import {mapGetters, mapState} from "vuex";
 //@ts-ignore
 import Form from "./Form";
+import Alert from "@/components/Alert.vue";
 
 interface iSettingForm {
   'include': Array<String>,
@@ -68,6 +74,7 @@ const Treads = defineComponent({
   },
   data() {
     return {
+      'successMessage': String(''),
       'infoItem': {
       } as iJob,
       'settingSchema': {
@@ -82,9 +89,21 @@ const Treads = defineComponent({
     Popup,
     Process,
     Info,
-    Form
+    Form,
+    Alert,
+  },
+  watch: {
+    socket() {
+      //@ts-ignore
+      this.socket.on('settingSaved', () => {
+        this.successMessage = 'Success save...'
+      })
+    }
   },
   methods: {
+    alertHide: function () {
+      this.successMessage = '';
+    },
     getSettings: function (id: String) {
       return this.threads[id]
     },
@@ -100,7 +119,7 @@ const Treads = defineComponent({
       //@ts-ignore
       this.$store.dispatch('showPreloader', true)
       // @ts-ignore
-      this.socket.emit('updateThreadSetting', { 'id': persistent.id, setting: record})
+      this.socket.emit('updateThreadSetting', { 'id': persistent.id, setting: record, token: this.getToken})
     },
     info: function (item: iJob) {
       this.infoItem = item;
@@ -117,7 +136,7 @@ const Treads = defineComponent({
       //@ts-ignore
       this.$store.dispatch('showPreloader', true)
       //@ts-ignore
-      this.socket.emit('delThread', [persistent.id])
+      this.socket.emit('delThread', {index: persistent.id, token: this.getToken})
     },
     //@ts-ignore
     hostFormat(item: iJob) {
@@ -173,7 +192,7 @@ const Treads = defineComponent({
       threads: state => state.threads
     }),
     ...mapGetters([
-      'isLoggedIn'
+      'isLoggedIn', 'getToken'
     ]),
     list() {
       let threads = []

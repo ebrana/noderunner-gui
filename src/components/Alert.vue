@@ -1,6 +1,6 @@
 <template>
   <teleport to="#flash">
-    <div class="alert alert-danger fade" v-bind:class="isShowed" role="alert">
+    <div class="alert my-alert fade" v-bind:class="isShowed + ' ' + type" role="alert">
       <slot name="content"></slot>
     </div>
   </teleport>
@@ -20,6 +20,10 @@ export default {
     showed: {
       type: String,
       default: 'hide'
+    },
+    type: {
+      type: String,
+      default: 'alert-danger'
     }
   },
   emits: ['alerthide'],
@@ -49,10 +53,7 @@ export default {
 </script>
 
 <style scoped>
-.alert-danger {
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
+.my-alert {
   position: absolute;
   z-index: 1000;
   right: 10px;

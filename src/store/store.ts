@@ -68,6 +68,9 @@ export default createStore({
                 case 'loginSuccess':
                 case 'loginError':
                     state.jwt = data.value
+                    if (data.value.token !== undefined && data.value.token !== '') {
+                        localStorage.jwt = data.value.token
+                    }
                     break;
                 case 'historyCountDecreased':
                     if (state.historyCounterInit === true) {
@@ -226,7 +229,11 @@ export default createStore({
             context.commit('showPreloader', value)
         },
         logout(context) {
+            localStorage.removeItem('jwt')
             context.commit('jwt', {})
+        },
+        jwt(context, value) {
+            context.commit('jwt', value)
         }
     },
     getters: {
@@ -268,6 +275,9 @@ export default createStore({
                 return false
             }
             return true
+        },
+        getToken: state => {
+            return state.jwt.token !== undefined ? state.jwt.token : null
         }
     }
 });
