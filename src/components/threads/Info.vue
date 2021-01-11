@@ -82,7 +82,7 @@ const Info = defineComponent({
     },
     itemOfList: function () {
       if (this.infoItem) {
-        let cloneObject = Object.assign(this.infoItem)
+        let cloneObject = Object.assign({}, this.infoItem)
         if (cloneObject.runningTime) {
           delete cloneObject.runningTime
         }
