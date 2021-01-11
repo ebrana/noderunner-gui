@@ -34,6 +34,8 @@ const config = {
         {event: 'settingSavedFalse'},
         {event: 'loginSuccess'},
         {event: 'loginError'},
+        {event: 'refreshTokenSuccess'},
+        {event: 'refreshTokenError'},
     ]
 };
 

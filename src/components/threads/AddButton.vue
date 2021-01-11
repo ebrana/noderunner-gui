@@ -22,6 +22,7 @@ import Popup from "./../Popup";
 //@ts-ignore
 import Form from "./Form";
 import {mapGetters} from "vuex";
+import Alert from "@/components/Alert.vue";
 
 interface iSettingForm {
   'include': Array<String>,
@@ -34,7 +35,8 @@ const AddButton = defineComponent({
   components: {
     Button,
     Popup,
-    Form
+    Form,
+    Alert
   },
   props: {
     'socket': {

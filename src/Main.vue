@@ -187,6 +187,22 @@ const Main = defineComponent({
     }
     if (localStorage.jwt) {
       store.dispatch('jwt', {token: localStorage.jwt})
+      const exp = new Date(localStorage.exp)
+      const current = new Date()
+      const expDate = exp.getTime() + (60*60*1000) // hodina v milisekundach
+      const diff = expDate-current.getTime()
+
+      if (diff > 0) {
+        setInterval(() => {
+          // @ts-ignore
+          this.socket.emit('refreshToken', {'token': localStorage.jwt})
+        }, diff) // pokud mame cas, tak naplanujeme refresh na prislusnou dobu
+      } else if (diff < 0 && diff > -10*60*1000) { // mene jak 10 minut (10 min od expirace je mozne jeste obnovit), obnovujeme ihned
+        // @ts-ignore
+        this.socket.emit('refreshToken', {'token': localStorage.jwt})
+      } else { // logout, token expired
+        this.logout()
+      }
     }
   },
   methods: {
@@ -207,6 +223,10 @@ const Main = defineComponent({
     login: function (record: iLoginForm) {
       // @ts-ignore
       this.socket.emit('login', record)
+      setInterval(() => {
+        // @ts-ignore
+        this.socket.emit('refreshToken', {'token': localStorage.jwt})
+      }, 3600000)
     },
     collapsing: function () {
       if (this.collapsed === false) {

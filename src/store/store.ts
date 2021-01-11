@@ -67,9 +67,12 @@ export default createStore({
             switch (config.events[data.key].event) {
                 case 'loginSuccess':
                 case 'loginError':
+                case 'refreshTokenSuccess':
+                case 'refreshTokenError':
                     state.jwt = data.value
                     if (data.value.token !== undefined && data.value.token !== '') {
                         localStorage.jwt = data.value.token
+                        localStorage.exp = new Date()
                     }
                     break;
                 case 'historyCountDecreased':
@@ -230,6 +233,7 @@ export default createStore({
         },
         logout(context) {
             localStorage.removeItem('jwt')
+            localStorage.removeItem('exp')
             context.commit('jwt', {})
         },
         jwt(context, value) {
