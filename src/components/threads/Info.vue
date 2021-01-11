@@ -3,13 +3,11 @@
     <template v-slot:content>
       <table class="table table-sm table-striped table-borderless">
         <tbody>
-        <tr v-for="(value, name, index) in item"
+        <tr v-for="(value, name, index) in itemOfList()"
             :key='index'
         >
-          <template v-if="name !== 'index' && name !== 'setting' && name !== 'runningTime'">
-            <th>{{ name }}</th>
-            <td><span v-if="name === 'started' || name === 'added'">{{ humanDate(value) }}</span><span v-else>{{ value }}</span></td>
-          </template>
+          <th>{{ name }}</th>
+          <td><span v-if="name === 'started' || name === 'added'">{{ humanDate(value) }}</span><span v-else>{{ value }}</span></td>
         </tr>
         </tbody>
       </table>
@@ -41,6 +39,11 @@ const Info = defineComponent({
       default: false
     }
   },
+  data() {
+    return {
+      'infoItem': this.item
+    }
+  },
   mounted() {
     if (this.showOnMounted) {
       //@ts-ignore
@@ -49,7 +52,7 @@ const Info = defineComponent({
   },
   emits: ['close'],
   watch: {
-    'isVisible': function(isVisible) {
+    'isVisible': function (isVisible) {
       if (isVisible) {
         //@ts-ignore
         this.$refs.popup.open();
@@ -57,7 +60,8 @@ const Info = defineComponent({
     }
   },
   methods: {
-    show: function () {
+    show: function (command: Object) {
+      this.infoItem = command
       //@ts-ignore
       this.$refs.popup.open();
     },
@@ -66,7 +70,7 @@ const Info = defineComponent({
       this.$emit('close');
     },
     humanDate: (timestamp: number) => {
-      const date = new Date(timestamp*1000)
+      const date = new Date(timestamp * 1000)
       const hours = date.getHours();
       const minutes = "0" + date.getMinutes();
       const seconds = "0" + date.getSeconds();
@@ -75,6 +79,24 @@ const Info = defineComponent({
       const year = date.getFullYear();
 
       return day.substr(-2) + '. ' + month.substr(-2) + '. ' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    },
+    itemOfList: function () {
+      if (this.infoItem) {
+        let cloneObject = Object.assign(this.infoItem)
+        if (cloneObject.runningTime) {
+          delete cloneObject.runningTime
+        }
+        if (cloneObject.setting) {
+          delete cloneObject.setting
+        }
+        if (cloneObject.setting) {
+          delete cloneObject.setting
+        }
+
+        return cloneObject
+      }
+
+      return this.infoItem
     }
   }
 });

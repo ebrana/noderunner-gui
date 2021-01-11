@@ -22,11 +22,7 @@
       </tbody>
     </table>
   </div>
-  <popup ref="infoPopup" id="commandInfoPopup" :showSubmitButton="false" modal-style="modal-lg" title="Command info">
-    <template v-slot:content="{ persistent }">
-      <commands-detail :command="persistent.command"></commands-detail>
-    </template>
-  </popup>
+  <Info ref="infoDetail" :show-on-mounted="false" />
   <popup ref="rerunPopup" id="rerunCommandPopup" :showSubmitButton="false" :confirm="true" title="Do you want to rerun this command?">
     <template v-slot:content="{ persistent }">
       <div>{{ persistent.command.job }}</div>
@@ -39,14 +35,13 @@ import {defineComponent} from "vue"
 //@ts-ignore
 import CommandsListItem from "./Item"
 //@ts-ignore
-import CommandsDetail from "./../detail/Detail"
-//@ts-ignore
 import Popup from "./../../Popup";
+import Info from "@/components/threads/Info.vue";
 import {mapState} from "vuex";
 
 const CommandsList = defineComponent({
   name: "CommandsList",
-  components: {CommandsListItem, Popup, CommandsDetail},
+  components: {CommandsListItem, Popup, Info},
   props: {
     type: {
       type: String,
@@ -101,7 +96,7 @@ const CommandsList = defineComponent({
   methods: {
     showCommandInfo: function (command: Object) {
       //@ts-ignore
-      this.$refs.infoPopup.open({'command': command});
+      this.$refs.infoDetail.show(command)
     },
     rerunCommand: function (command: Object) {
       //@ts-ignore

@@ -27,7 +27,7 @@
       <span>Are you sure you want to delete a thread #{{ persistent.id+1 }} ?</span>
     </template>
   </Popup>
-  <Info :item="infoItem" v-if="infoItem._id" @close="infoClose" show-on-mounted="true" />
+  <Info :item="infoItem" v-if="infoItem._id" @close="infoClose" :show-on-mounted="true" />
   <Alert v-if="successMessage !== ''" @alerthide="alertHide" type="alert-success">
     <template v-slot:content>
       <span>{{ successMessage }}</span>
