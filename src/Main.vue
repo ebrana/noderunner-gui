@@ -63,7 +63,7 @@
     </div>
 
     <div>
-      <commands-list :type="listType" :socket="socket"></commands-list>
+      <commands-list :type="listType" :socket="socket" ref="grid"></commands-list>
     </div>
 
   </div>
@@ -255,6 +255,10 @@ const Main = defineComponent({
     },
     loadQueue: function (queueType: string) {
       this.listType = queueType
+      //@ts-ignore
+      this.$refs.grid.resetFilter()
+      //@ts-ignore
+      this.socket.emit('requestQueueData', {queue: queueType, filter: {}});
     }
   }
 });
