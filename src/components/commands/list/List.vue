@@ -6,8 +6,7 @@
         <thead class="thead-light">
         <tr>
           <th v-for="(column, index) in columns"
-              :key='index'
-          >{{ column }}
+              :key='index' v-bind:class="column === 'job' ? 'job' : ''">{{ column }}
           </th>
         </tr>
         </thead>
@@ -119,7 +118,6 @@ const CommandsList = defineComponent({
       this.$refs.rerunPopup.open({'command': command});
     },
     rerunSuccess: function (record: any, persistent: any) {
-      console.log(persistent.command._id)
       //@ts-ignore
       this.socket.emit('rerun', {id: persistent.command._id, queue: persistent.command.queue});
     },
@@ -128,7 +126,8 @@ const CommandsList = defineComponent({
       const key = event?.target?.name;
       //@ts-ignore
       const search = {};
-      if (key !== '') {
+      //@ts-ignore
+      if ((key !== '' && key !== 'status') || (key === 'status' && event?.target?.value !== '-')) {
         //@ts-ignore
         search[key] = event?.target?.value
       }
