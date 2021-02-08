@@ -107,16 +107,16 @@ export default {
     function excludeByIndex(index: number) {
       return props.default && props.default.exclude ? props.default.exclude[index] : ''
     }
-    watch(props, (value) => {
-      if (value.default && value.default.include) {
-        value.default.include.map((value, index) => {
+    watch(props.default, (value) => {
+      if (value && value.include) {
+        value.include.map((value, index) => {
           if (index !== 0) {
             includeAppend()
           }
         })
       }
-      if (value.default && value.default.exclude) {
-        value.default.exclude.map((value, index) => {
+      if (value && value.exclude) {
+        value.exclude.map((value, index) => {
           if (index !== 0) {
             excludeAppend()
           }

@@ -1,5 +1,5 @@
 <template>
-  <input type="text" class="form-control" v-bind:name="name" v-bind:value="value">
+  <input type="text" class="form-control" v-bind:name="name" v-bind:value="value" v-bind:placeholder="placeholder">
 </template>
 
 <script lang="ts">
@@ -10,7 +10,8 @@ export default {
   name: "Input",
   props: {
     name: String,
-    value: String
+    value: String,
+    placeholder: String
   },
   setup() {
     const isMounted = ref(false)

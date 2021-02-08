@@ -1,6 +1,6 @@
 <template>
   <div id="commands-list-container" class="mt-4">
-    <h3 v-if="type" class="m-2"><strong>{{ type }}</strong> jobs list <a class="btn btn-default btn-xs" @click="refresh"><i class="fa fa-refresh"></i></a></h3>
+    <h3 v-if="type" class="m-2"><strong>{{ type }}</strong> jobs list <Button @button-click="addCommand" v-if="jwt && isLoggedIn === true && type !== 'history'" /> <a class="btn btn-default btn-xs" @click="refresh"><i class="fa fa-refresh"></i></a></h3>
     <form ref="search">
       <table class="table">
         <thead class="thead-light">
@@ -16,7 +16,7 @@
               :key='index'
           >
               <span v-if="column === 'status'">
-                <select class="form-control" v-on:change="filter" name="status">
+                <select class="form-control" v-on:change="filter" name="status" v-model="search[column]">
                   <option>-</option>
                   <option>planned</option>
                   <option>running</option>
@@ -26,8 +26,8 @@
                   <option>stucked</option>
                 </select>
               </span>
-            <span v-else-if="column !== 'info' && column !== 'infoonly' && column !== 'rerun' && column !== 'duration' && column !== 'finished'">
-                <input type="text" v-bind:name="column" class="form-control" v-on:keyup.enter="filter">
+            <span v-else-if="column !== 'info' && column !== 'infoonly' && column !== 'rerun' && column !== 'duration' && column !== 'finished' && column !== 'actions'">
+                <input type="text" v-bind:name="column" class="form-control" v-on:keyup.enter="filter" v-model="search[column]">
               </span>
           </th>
         </tr>
@@ -38,6 +38,8 @@
             :columns="columns"
             @show-command-info="showCommandInfo"
             @rerun-command="rerunCommand"
+            @delclick="delclick"
+            @editclick="editclick"
         ></commands-list-item>
         </tbody>
       </table>
@@ -49,6 +51,21 @@
       <div>{{ persistent.command.job }}</div>
     </template>
   </Popup>
+  <Popup ref="commandFormPopup" id="commandFormPopup" @submit="commandSubmit" submitButtonText="Save" title="Command definition" :schema="commandSchema">
+    <template v-slot:content="{ persistent }">
+      <CommandForm :persistent="persistent" ref="form" :default="persistent.command" />
+    </template>
+  </Popup>
+  <Popup ref="commandPopupEdit" id="commandPopupEdit" @submit="updateCommand" submitButtonText="Save" title="Update command" :schema="commandSchema">
+    <template v-slot:content="{ persistent }">
+      <CommandForm :persistent="{id: persistent._id, type: persistent.type}" ref="form" :default="persistent.command" />
+    </template>
+  </Popup>
+  <Popup ref="commandPopupDelete" id="commandPopupDelete" @submit="removeCommand" confirm="true" title="Confirm dialog" submitButtonClass="btn-danger">
+    <template v-slot:content="{ persistent }">
+      <span>Are you sure you want to delete a command:<br>"<strong>{{ persistent.job }} [{{ persistent.host}}]</strong>" ?</span>
+    </template>
+  </Popup>
 </template>
 
 <script lang="ts">
@@ -58,11 +75,14 @@ import CommandsListItem from "./Item"
 //@ts-ignore
 import Popup from "./../../Popup";
 import Info from "@/components/threads/Info.vue";
-import {mapState} from "vuex";
+import {mapGetters, mapState} from "vuex";
+import Button from "@/components/Button.vue";
+import CommandForm from "@/components/commands/form/CommandForm.vue";
+import config from "../../../../config/config";
 
 const CommandsList = defineComponent({
   name: "CommandsList",
-  components: {CommandsListItem, Popup, Info},
+  components: {CommandForm, Button, CommandsListItem, Popup, Info},
   props: {
     type: {
       type: String,
@@ -70,21 +90,38 @@ const CommandsList = defineComponent({
     },
     socket: {
       type: Object
-    }
+    },
   },
   computed: {
     ...mapState({
       //@ts-ignore
       commands: state => state.listItems,
-    })
+    }),
+    ...mapGetters([
+      'isLoggedIn', 'getToken'
+    ]),
   },
   data: () => {
     return {
       columns: [],
       columnsTypes: {
         history: ['info', 'rerun', 'finished', 'duration', 'host', 'job', 'output', 'status'],
-        immediate: ['info', 'added', 'host', 'job', 'status'],
-        planned: ['info', 'schedule', 'host', 'job'],
+        immediate: ['info', 'added', 'host', 'job', 'status', 'tags'],
+        planned: ['info', 'schedule', 'host', 'job', 'tags', 'actions'],
+      },
+      'commandSchema': {
+        'command': null,
+        'host': null,
+        'schedule': null,
+        'tags': []
+      },
+      search: {
+        'duration': null,
+        'host': null,
+        'job': null,
+        'output': null,
+        'status': null,
+        'tags': null
       }
     }
   },
@@ -121,27 +158,45 @@ const CommandsList = defineComponent({
       //@ts-ignore
       this.socket.emit('rerun', {id: persistent.command._id, queue: persistent.command.queue});
     },
-    filter: function (event: Event) {
+    filter: function () {
       //@ts-ignore
-      const key = event?.target?.name;
-      //@ts-ignore
-      const search = {};
-      //@ts-ignore
-      if ((key !== '' && key !== 'status') || (key === 'status' && event?.target?.value !== '-')) {
-        //@ts-ignore
-        search[key] = event?.target?.value
-      }
-      //@ts-ignore
-      this.socket.emit('requestQueueData', {queue: this.type, filter: search});
+      this.socket.emit('requestQueueData', {queue: this.type, filter: this.search});
     },
     resetFilter: function () {
       //@ts-ignore
-      this.$refs.search.reset()
+      Object.keys(this.search).map((value => this.search[value] = null ))
     },
     refresh: function () {
       this.resetFilter()
       //@ts-ignore
       this.socket.emit('requestQueueData', {queue: this.type, filter: {}});
+    },
+    jwt() {
+      return config.jwt.enable
+    },
+    addCommand: function () {
+      //@ts-ignore
+      this.$refs.commandFormPopup.open({'type': this.type, 'command': {} })
+    },
+    commandSubmit: function (record: any, persistent: any) {
+      //@ts-ignore
+      this.socket.emit('addCommand', {command: record, item: persistent, token: this.getToken, filter: this.search});
+    },
+    delclick: function (id: String, job: String, host: String) {
+      //@ts-ignore
+      this.$refs.commandPopupDelete.open({'id':id, 'job': job, 'host': host})
+    },
+    editclick: function (command: Object) {
+      //@ts-ignore
+      this.$refs.commandPopupEdit.open({'type': this.type, 'command': command})
+    },
+    removeCommand: function (record: any, persistent: any) {
+      //@ts-ignore
+      this.socket.emit('delCommand', {id: persistent.id, token: this.getToken, filter: this.search});
+    },
+    updateCommand: function (record: any, persistent: any) {
+      //@ts-ignore
+      this.socket.emit('updateCommand', {id: persistent.command._id, command: record, token: this.getToken, filter: this.search});
     }
   }
 });
