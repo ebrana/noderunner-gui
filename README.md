@@ -1,4 +1,4 @@
-# test3
+# Noderunner GUI
 
 ## Project setup
 ```

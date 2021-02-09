@@ -5,13 +5,18 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "prestart": "vue-cli-service build",
+    "start": "nodemon src/server/server.js"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.15",
     "@fortawesome/fontawesome-free": "^5.15.2",
     "bootstrap": "^4.6.0",
+    "compression": "^1.7.4",
     "core-js": "^3.8.3",
+    "express": "^4.17.1",
+    "nconf": "^0.11.2",
     "socket.io": "^2.4.1",
     "socket.io-client": "^2.4.0",
     "vue": "^3.0.5",
