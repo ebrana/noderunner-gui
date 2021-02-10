@@ -4,7 +4,7 @@ module.exports = {
         devtool: (process.env.NODE_ENV === 'development') ? 'inline-source-map' : false,
         mode: process.env.NODE_ENV,
         performance: {
-            hints: (process.env.NODE_ENV === 'development') ? true : false
+            hints: (process.env.NODE_ENV === 'development') ? undefined : false
         },
         optimization: {
             splitChunks: {
