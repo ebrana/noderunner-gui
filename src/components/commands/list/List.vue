@@ -66,6 +66,11 @@
       <span>Are you sure you want to delete a command:<br>"<strong>{{ persistent.job }} [{{ persistent.host}}]</strong>" ?</span>
     </template>
   </Popup>
+  <Alert v-if="error" @alerthide="alertHide">
+    <template v-slot:content>
+      <span>{{ error }}</span>
+    </template>
+  </Alert>
 </template>
 
 <script lang="ts">
@@ -76,13 +81,14 @@ import CommandsListItem from "./Item"
 import Popup from "./../../Popup";
 import Info from "@/components/threads/Info.vue";
 import {mapGetters, mapState} from "vuex";
+import Alert from "@/components/Alert.vue";
 import Button from "@/components/Button.vue";
 import CommandForm from "@/components/commands/form/CommandForm.vue";
 import config from "../../../../config/config";
 
 const CommandsList = defineComponent({
   name: "CommandsList",
-  components: {CommandForm, Button, CommandsListItem, Popup, Info},
+  components: {CommandForm, Button, CommandsListItem, Popup, Info, Alert},
   props: {
     type: {
       type: String,
@@ -103,6 +109,7 @@ const CommandsList = defineComponent({
   },
   data: () => {
     return {
+      error: String(''),
       columns: [],
       columnsTypes: {
         history: ['info', 'rerun', 'finished', 'duration', 'host', 'job', 'output', 'status'],
@@ -126,6 +133,12 @@ const CommandsList = defineComponent({
     }
   },
   watch: {
+    socket() {
+      //@ts-ignore
+      this.socket.on('commandError', (message: any) => {
+        this.error = message ? message : 'unknown error'
+      })
+    },
     type: {
       handler(queueType) {
         switch (queueType) {
@@ -146,6 +159,9 @@ const CommandsList = defineComponent({
     }
   },
   methods: {
+    alertHide: function () {
+      this.error = '';
+    },
     showCommandInfo: function (command: Object) {
       //@ts-ignore
       this.$refs.infoDetail.show(command)
