@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td v-for="(column, index) in columns" :key='index' class="align-middle">
-      <div v-if="column === 'status'" class="alert text-center" v-bind:class="[command[column] !== 'success' ? 'alert-danger' : 'alert-success']">{{command[column]}}</div>
+      <div v-if="column === 'status'" class="alert text-center" v-bind:class="[command[column] === 'success' ? 'alert-success' : command[column] === 'error' ? 'alert-danger' : 'alert-warning']">{{command[column]}}</div>
         <Button v-else-if="column === 'info'" icon="fa-question" styleClass="btn-info" @button-click="showInfo(command)"></Button>
         <Button v-else-if="column === 'rerun'" icon="fa-play-circle" styleClass="btn-info" @button-click="rerunCommand(command)"></Button>
       <div v-else>
