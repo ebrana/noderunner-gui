@@ -128,10 +128,14 @@ const Main = defineComponent({
     }
   },
   setup() {
-    let buttons = config.servers;
+    //@ts-ignore
+    // eslint-disable-next-line no-undef
+    let buttons = process.env.NODE_ENV === 'production' ? MyConfig.servers : config.servers; // MyConfig je globalni promenna, kterou poskytuje Express ze server.js
     let basePath = '';
     let socket = null;
-    const jwtEnable = config.jwt.enable;
+    //@ts-ignore
+    // eslint-disable-next-line no-undef
+    const jwtEnable = process.env.NODE_ENV === 'production' ? MyConfig.jwt.enable : config.jwt.enable;
 
     return {
       buttons,
