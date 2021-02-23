@@ -1,4 +1,5 @@
 # Noderunner GUI
+Frontend application for noderunner - [více zde](https://github.com/ebrana/noderunner-gui)
 
 ## Project setup
 ```
@@ -7,12 +8,12 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run-script serve
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+npm run-script build
 ```
 
 ### Lints and fixes files
@@ -20,10 +21,27 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Build and run server
+```
+npm start
+```
 
-## docker support
+### Customize configuration
+Create custom.json into config folder.
+Example configuration:
+```javascript
+{
+    "servers": [
+        {"name": "localhost", "url": "localhost:8001"},
+        {"name": "devel", "url": "devel.tld"},
+    ],
+    "jwt": {
+        "enable": true
+    }
+}
+```
+
+## Docker support
 
 ### instal npm packages 
 ```
