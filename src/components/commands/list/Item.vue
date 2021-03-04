@@ -19,7 +19,7 @@
         <span v-else-if="column === 'tags'">
           {{ command['tags'] && Array.isArray(command['tags']) ? command['tags'].join(', ') : '' }}
         </span>
-        <span v-else v-bind:class="column === 'job' || column === 'output' ? 'job' : ''" v-bind:title="command[column]">
+        <span v-else v-bind:class="column === 'job' || column === 'output' ? 'joblist' : ''" v-bind:title="command[column]">
           {{ command[column] }}
         </span>
       </div>
@@ -88,7 +88,7 @@ export default {
 </script>
 
 <style scoped>
-.job {
+.joblist {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
