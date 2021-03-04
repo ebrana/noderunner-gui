@@ -1,8 +1,8 @@
 <template>
   <th scope="row" v-bind:style="colorsStyle(item.index)" class="text-center align-middle">#{{ item.index + 1 }}</th>
-  <td class="align-middle">{{ hostFormat(item) }}</td>
+  <td class="align-middle host" v-bind:title="hostFormat(item)">{{ hostFormat(item) }}</td>
   <td class="job align-middle" v-bind:title="item.job">{{ item.job }}</td>
-  <td colspan="align-middle">
+  <td class="align-middle status">
     <Button @button-click="info(item)" icon="fa-refresh" :text="item.status" styleClass="btn-warning" v-if="item.job"/>
   </td>
   <td class="running align-middle"><span id="{{ item.thread }}">{{ runningHumanFormat(runningTime) }}</span></td>
@@ -91,7 +91,7 @@ const Process = defineComponent({
     // @ts-ignore
     colorsStyle(key) {
       //@ts-ignore
-      return 'background-color: ' + this.colors[key * 2];
+      return 'background-color: ' + this.colors[key * 2] + ';padding: 18px';
     },
     // @ts-ignore
     runningHumanFormat(runningTime) {
@@ -131,10 +131,22 @@ export default Process
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 30%;
+  width: 38%;
   max-width: 300px;
+  min-width: 200px;
 }
-
+.host {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 26%;
+  max-width: 200px;
+  min-width: 100px;
+}
+.status {
+  width: 150px;
+  min-width: 150px;
+}
 .running {
   width: 10%;
   max-width: 180px;
