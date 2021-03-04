@@ -166,13 +166,21 @@ const Main = defineComponent({
       'isLoggedIn'
     ]),
   },
+  beforeCreate() {
+    const uri = window.location.search.substring(1);
+    let params = new URLSearchParams(uri)
+    if (params.get("server") === null) {
+      window.location.href = window.location.origin + '?server=' + config.servers[0].url
+      return
+    }
+  },
   mounted() {
     //@ts-ignore
     const store = this.$store;
     const uri = window.location.search.substring(1);
-    this.basePath = window.location.origin;
-    let params = new URLSearchParams(uri);
-    const server: string | null = params.get("server") === null ? config.servers[0].url : params.get("server");
+    this.basePath = window.location.origin
+    let params = new URLSearchParams(uri)
+    const server: string | null = params.get("server");
     store.dispatch('server', server)
     //@ts-ignore
     const socket = this.socket = io(server);
@@ -180,7 +188,7 @@ const Main = defineComponent({
       for (let event in config.events) {
         //@ts-ignore
         socket.on(config.events[event].event, (data) => {
-          store.dispatch('emitData', {key: event, value: data});
+          store.dispatch('emitData', {key: event, value: data})
         })
       }
       socket.on('permissionDenied', (message: any) => {
