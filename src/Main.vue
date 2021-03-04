@@ -170,7 +170,7 @@ const Main = defineComponent({
     const uri = window.location.search.substring(1);
     let params = new URLSearchParams(uri)
     if (params.get("server") === null) {
-      window.location.href = window.location.origin + '?server=' + config.servers[0].url
+      window.location.href = window.location.origin + '?server=' + this.buttons[0].url
       return
     }
   },
