@@ -82,6 +82,7 @@
       <span>{{ permissionDenied }}</span>
     </template>
   </Alert>
+  <ScrollTopArrow></ScrollTopArrow>
 </template>
 
 <script lang="ts">
@@ -99,6 +100,7 @@ import {mapState, mapGetters, mapActions} from "vuex";
 import Popup from "@/components/Popup.vue";
 import Login from "@/components/Login.vue";
 import Alert from "@/components/Alert.vue";
+import ScrollTopArrow from "@/components/ScrollTopArrow.vue";
 
 interface iLoginForm {
   'email': String,
@@ -108,6 +110,7 @@ interface iLoginForm {
 const Main = defineComponent({
   name: "Main",
   components: {
+    ScrollTopArrow,
     Alert,
     Login,
     Chart,
