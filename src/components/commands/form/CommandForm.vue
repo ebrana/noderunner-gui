@@ -72,7 +72,6 @@ export default {
       if (value && value.tags) {
         value.tags.map((value: any, index: number) => {
           if (index !== 0) {
-            console.log(index)
             tagsAppend()
           }
         })

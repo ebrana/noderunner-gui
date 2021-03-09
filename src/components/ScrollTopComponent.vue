@@ -24,7 +24,6 @@ export default {
 
     function scrollListener() {
       visible.value = window.scrollY > 150
-      console.log(visible)
     }
 
     onMounted(() => {
