@@ -1,7 +1,7 @@
 [Unit]
 Description=Daemon for running Noderunner GUI
-StartLimitBurst=5
-StartLimitIntervalSec=150
+#StartLimitBurst=5 #fix for newest version systemd
+#StartLimitIntervalSec=150 #fix for newest version systemd
 
 [Service]
 ExecStart=/usr/bin/n use 10.16.2 src/server/server.js
