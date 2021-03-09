@@ -1,0 +1,21 @@
+[Unit]
+Description=Daemon for running Noderunner GUI
+StartLimitBurst=5
+StartLimitIntervalSec=150
+
+[Service]
+ExecStart=/usr/bin/n use 10.16.2 src/server/server.js
+WorkingDirectory=/home/noderunner-gui
+
+# try to restart service 5 times with 20s delay, then fail
+Restart=always
+RestartSec=20
+
+Environment=ENV=production
+User=nginx
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=noderunner-gui
+
+[Install]
+WantedBy=multi-user.target
