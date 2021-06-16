@@ -26,8 +26,15 @@
                   <option>stucked</option>
                 </select>
               </span>
-            <span v-else-if="column !== 'info' && column !== 'infoonly' && column !== 'rerun' && column !== 'duration' && column !== 'finished' && column !== 'actions'">
-                <input type="text" v-bind:name="column" class="form-control" v-on:keyup.enter="filter" v-model="search[column]">
+              <span v-else-if="column === 'duration'" class="text-black-50">
+                <div class="row">
+                  <span class="col-sm-1 col-form-label">&GreaterEqual;</span>
+                  <input type="text" v-bind:name="column" class="form-control float-left col-md-3" v-on:keyup.enter="filter" v-model="search[column]">
+                  <span class="col-sm-1 col-form-label">second</span>
+                </div>
+              </span>
+              <span v-else-if="column !== 'info' && column !== 'infoonly' && column !== 'rerun' && column !== 'duration' && column !== 'finished' && column !== 'actions'">
+                  <input type="text" v-bind:name="column" class="form-control" v-on:keyup.enter="filter" v-model="search[column]">
               </span>
           </th>
         </tr>
