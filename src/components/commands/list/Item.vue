@@ -93,7 +93,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
-  max-width: 670px;
+  max-width: 600px;
   display: block;
 }
 .finished {
