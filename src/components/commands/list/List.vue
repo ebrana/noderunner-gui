@@ -71,6 +71,11 @@
       <span>{{ error }}</span>
     </template>
   </Alert>
+  <Alert v-if="successMessage !== ''" @alerthide="successHide" type="alert-success">
+    <template v-slot:content>
+      <span>{{ successMessage }}</span>
+    </template>
+  </Alert>
 </template>
 
 <script lang="ts">
@@ -110,6 +115,7 @@ const CommandsList = defineComponent({
   data: () => {
     return {
       error: String(''),
+      successMessage: String(''),
       columns: [],
       columnsTypes: {
         history: ['info', 'rerun', 'finished', 'duration', 'host', 'job', 'output', 'status'],
@@ -138,6 +144,10 @@ const CommandsList = defineComponent({
       this.socket.on('commandError', (message: any) => {
         this.error = message ? message : 'unknown error'
       })
+      //@ts-ignore
+      this.socket.on('commandSuccess', (message: any) => {
+        this.successMessage = message ? message : 'unknown error'
+      })
     },
     type: {
       handler(queueType) {
@@ -161,6 +171,9 @@ const CommandsList = defineComponent({
   methods: {
     alertHide: function () {
       this.error = '';
+    },
+    successHide: function () {
+      this.successMessage = '';
     },
     showCommandInfo: function (command: Object) {
       //@ts-ignore
